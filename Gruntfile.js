@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         less: {
@@ -17,19 +18,27 @@ module.exports = function(grunt) {
                     "./static/js/bundle.js": ["./js/main.js"]
                 },
                 options: {
-                    debug: true,
-                    transform: [["babelify", { presets: ["react"]}]]
+                    watch: true,
+                    keepAlive: true,
+                    browserifyOptions: {
+                        debug: true,
+                        transform: [["babelify", { presets: ["react"]}]]
+                    }
                 }
             }
         },
         watch: {
-            browserify: {
-                files: ['js/**/*.js'],
-                tasks: ['browserify']
-            },
             less: {
                 files: ['less/**/*.less'],
-                tasks: ['less']
+                tasks: ['less:development']
+            }
+        },
+        concurrent: {
+            watch: {
+                tasks: ['browserify:dev', 'watch'],
+                options: {
+                    logConcurrentOutput: true
+                }
             }
         }
     });
@@ -37,4 +46,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-concurrent');
+
+    grunt.registerTask('default', ['concurrent:watch']);
 };
