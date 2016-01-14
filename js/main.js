@@ -29,7 +29,7 @@ ReactDOM.render(
       <Router history={history}>
         <Route path="/" component={Template}>
           <IndexRoute component={Index} />
-          <Route path="/image/:image_id" component={Image} />
+          <Route path="/images/:image_id" component={Image} />
         </Route>
       </Router>
     </Provider>,

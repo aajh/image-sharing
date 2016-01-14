@@ -13,8 +13,8 @@ class Image extends Component {
                     <p>{image.uploaded.toLocaleDateString()}</p>
                 </div>
                 <div className="row">
-                    <a href={`/${image.src}`}>
-                <img src={`/${image.src}`} alt={image.title} width="100%" />
+                    <a href={`${image.src}`}>
+                <img src={`${image.src}`} alt={image.title} width="100%" />
                     </a>
                 </div>
                 <div className="row image-description">

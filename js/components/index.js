@@ -28,7 +28,7 @@ class SmallImage extends Component {
         const image = this.props.image;
         return (
             <div className="col span_3">
-                <Link to={`/image/${image.id}`}>
+                <Link to={`/images/${image.id}`}>
                   <img src={image.src} width="100%" />
                 </Link>
             </div>
