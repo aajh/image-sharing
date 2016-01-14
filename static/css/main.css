@@ -37,6 +37,22 @@ a {
     margin-top: 5em;
 }
 
+.image .image-title h1 {
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.image .image-title p {
+    margin-top: -0.46em;
+    font-weight: 300;
+}
+.image img {
+    margin-left: 2em;
+    margin-right: 2em;
+}
+.image .image-description {
+
+}
+
 
 
 /*! HTML5 Boilerplate v5.0 | MIT License | http://h5bp.com/ */

@@ -8,16 +8,17 @@ import { createHistory } from 'history'
 import { Router, Route, IndexRoute } from 'react-router'
 import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
 
-import imgApp from './reducers'
+import images from './reducers'
 
 import Template from './components/template'
 import Index from './components/index'
 import Image from './components/image'
 
 
-const reducer = combineReducers(Object.assign({}, imgApp, {
+const reducer = combineReducers({
+    images,
     routing: routeReducer
-}));
+});
 const store = createStore(reducer);
 const history = createHistory();
 
@@ -28,7 +29,7 @@ ReactDOM.render(
       <Router history={history}>
         <Route path="/" component={Template}>
           <IndexRoute component={Index} />
-          <Route path="/image" component={Image} />
+          <Route path="/image/:image_id" component={Image} />
         </Route>
       </Router>
     </Provider>,
