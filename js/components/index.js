@@ -31,14 +31,12 @@ class SmallImage extends Component {
     render() {
         const image = this.props.image;
         return (
-            <div>
-              <div className="image-container">
+            <div><div>
                 <div />
                 <Link to={`/images/${image.id}`}>
                   <img src={image.src} alt={image.title}/>
                 </Link>
-              </div>
-            </div>
+            </div></div>
         );
     }
 }
@@ -50,7 +48,7 @@ class ImageBrowser extends Component {
            return <SmallImage image={i} key={i.id} />
         });
         return (
-            <blocks className="browse" cols="4">
+            <blocks className="browse">
                 {images}
             </blocks>
         );
@@ -61,7 +59,7 @@ class Index extends Component {
     render() {
         const { images } = this.props;
         return (
-            <div>
+            <div className="index-route">
                 <MainTitle />
                 <Upload />
                 <ImageBrowser images={images} />
