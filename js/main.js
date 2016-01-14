@@ -1,7 +1,10 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import { applyMiddleware, createStore, combineReducers } from 'redux'
+import thunkMiddleware from 'redux-thunk'
 import { Provider } from 'react-redux'
 
 import { createHistory } from 'history'
@@ -19,9 +22,13 @@ const reducer = combineReducers({
     images,
     routing: routeReducer
 });
-const store = createStore(reducer);
-const history = createHistory();
 
+const createStoreWithMiddleware = applyMiddleware(
+    thunkMiddleware
+)(createStore);
+const store = createStoreWithMiddleware(reducer);
+
+const history = createHistory();
 syncReduxAndRouter(history, store);
 
 ReactDOM.render(

@@ -6,7 +6,17 @@
   "author": "Aapo Hanski",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.3"
+    "babel-polyfill": "^6.3.14",
+    "express": "^4.13.3",
+    "history": "^1.17.0",
+    "isomorphic-fetch": "^2.2.0",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-redux": "^4.0.6",
+    "react-router": "^1.0.3",
+    "redux": "^3.0.5",
+    "redux-simple-router": "^1.0.2",
+    "redux-thunk": "^1.0.3"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
@@ -16,13 +26,6 @@
     "grunt-concurrent": "^2.1.0",
     "grunt-contrib-less": "^1.1.0",
     "grunt-contrib-watch": "^0.6.1",
-    "history": "^1.17.0",
-    "react": "^0.14.6",
-    "react-dom": "^0.14.6",
-    "react-redux": "^4.0.6",
-    "react-router": "^1.0.3",
-    "redux": "^3.0.5",
-    "redux-devtools": "^3.0.1",
-    "redux-simple-router": "^1.0.2"
+    "redux-devtools": "^3.0.1"
   }
 }
