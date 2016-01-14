@@ -5,10 +5,12 @@ import { Link } from 'react-router'
 class MainTitle extends Component {
     render() {
         return (
-            <div className="row title" >
-                <h1>AbosUr</h1>
-                <p>Simple image uploads</p>
-            </div>
+            <row className="title center-columns">
+                <column cols="6">
+                   <h1>AbosUr</h1>
+                   <p>Simple image uploads</p>
+                </column>
+            </row>
         );
     }
 }
@@ -16,9 +18,11 @@ class MainTitle extends Component {
 class Upload extends Component {
     render() {
         return (
-            <div className="row upload">
-                <p>To upload, drag & drop or <a href="#">select</a> an image.</p>
-            </div>
+            <row className="upload center-columns">
+                <column cols="6">
+                  <p>To upload, drag & drop or <a href="#">select</a> an image.</p>
+                </column>
+            </row>
         );
     }
 }
@@ -27,10 +31,13 @@ class SmallImage extends Component {
     render() {
         const image = this.props.image;
         return (
-            <div className="col span_3">
+            <div>
+              <div className="image-container">
+                <div />
                 <Link to={`/images/${image.id}`}>
-                  <img src={image.src} width="100%" />
+                  <img src={image.src} alt={image.title}/>
                 </Link>
+              </div>
             </div>
         );
     }
@@ -42,18 +49,10 @@ class ImageBrowser extends Component {
            const i = this.props.images[key];
            return <SmallImage image={i} key={i.id} />
         });
-        let grouped = [];
-        for (let i = 0; i < images.length; i = i + 4) {
-            grouped.push(images.slice(i, i + 4));
-        }
         return (
-            <div className="browse">
-                {grouped.map((row, i) =>
-                            <div key={i} className="row gutters">
-                              {row}
-                            </div>
-                )}
-            </div>
+            <blocks className="browse" cols="4">
+                {images}
+            </blocks>
         );
     }
 }

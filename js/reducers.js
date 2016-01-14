@@ -27,6 +27,13 @@ const initialState = {
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             uploaded: new Date(2016, 1, 12),
             src: "/img/sample_4.jpg"
+        },
+        5: {
+            id: 5,
+            title: "Yellow",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            uploaded: new Date(2016, 1, 12),
+            src: "/img/sample_5.jpg"
         }
     }
 };
