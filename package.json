@@ -2,7 +2,6 @@
   "name": "image-sharing",
   "version": "1.0.0",
   "description": "An image sharing service",
-  "main": "server.js",
   "author": "Aapo Hanski",
   "license": "ISC",
   "dependencies": {
@@ -27,5 +26,8 @@
     "grunt-contrib-less": "^1.1.0",
     "grunt-contrib-watch": "^0.6.1",
     "redux-devtools": "^3.0.1"
+  },
+  "scripts": {
+      "start": "DEBUG=express:* node --use_strict server.js"
   }
 }

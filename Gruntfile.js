@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         less: {
-            development: {
+            dev: {
                 options: {
                     paths: ["less"]
                 },
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         watch: {
             less: {
                 files: ['less/**/*.less'],
-                tasks: ['less:development']
+                tasks: ['less:dev']
             }
         },
         concurrent: {
