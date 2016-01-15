@@ -1,4 +1,10 @@
-const initialState = {
+import { combineReducers } from 'redux'
+import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
+         IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_CANCEL }
+from './actions/upload'
+
+
+const initialImagesState = {
     images: {
         1: {
             id: 1,
@@ -38,6 +44,28 @@ const initialState = {
     }
 };
 
-export default function images(state = initialState, action) {
+export function images(state = initialImagesState, action) {
     return state;
+}
+
+
+
+
+const initialUploadState = {
+    image: undefined
+};
+
+export function upload(state = initialUploadState, action) {
+    switch(action.type) {
+    case IMAGE_UPLOAD_SELECT_IMAGE:
+        return Object.assign({}, state, {
+            image: action.image
+        });
+    case IMAGE_UPLOAD_CANCEL:
+        return Object.assign({}, state, {
+            image: undefined
+        });
+    default:
+        return state;
+    }
 }

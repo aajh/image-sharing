@@ -3,7 +3,7 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { applyMiddleware, createStore, combineReducers } from 'redux'
+import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { Provider } from 'react-redux'
 
@@ -11,22 +11,23 @@ import { createHistory } from 'history'
 import { Router, Route, IndexRoute } from 'react-router'
 import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
 
-import images from './reducers'
+import * as reducers from './reducers'
 
 import Template from './components/template'
 import Index from './routes/index'
 import Image from './routes/image'
 
 
-const reducer = combineReducers({
-    images,
+const reducer = combineReducers(Object.assign({}, reducers, {
     routing: routeReducer
-});
+}));
 
-const createStoreWithMiddleware = applyMiddleware(
-    thunkMiddleware
+const finalCreateStore = compose(
+    applyMiddleware(thunkMiddleware),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore);
-const store = createStoreWithMiddleware(reducer);
+
+const store = finalCreateStore(reducer);
 
 const history = createHistory();
 syncReduxAndRouter(history, store);

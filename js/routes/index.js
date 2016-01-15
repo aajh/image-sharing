@@ -5,6 +5,8 @@ import { Link } from 'react-router'
 import Upload from '../components/upload'
 import ImageBrowser from '../components/image-browser'
 
+import { selectImage } from '../actions/upload'
+
 class MainTitle extends Component {
     render() {
         return (
@@ -20,11 +22,19 @@ class MainTitle extends Component {
 
 class Index extends Component {
     render() {
-        const { images } = this.props;
+        const { dispatch, images, upload } = this.props;
         return (
             <div className="index-route">
                 <MainTitle />
-                <Upload />
+                <Upload
+            onFileSelected={ e =>
+              dispatch(selectImage(e.target.files[0]))
+            }
+            onUploadClick={
+                e => undefined
+            }
+            image={upload.image}
+                />
                 <ImageBrowser images={images} />
             </div>
         );
@@ -32,7 +42,10 @@ class Index extends Component {
 }
 
 function select(state) {
-    return state.images;
+    return {
+        images: state.images.images,
+        upload: state.upload
+    };
 }
 
 export default connect(select)(Index);
