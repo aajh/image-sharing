@@ -14,8 +14,8 @@ import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
 import images from './reducers'
 
 import Template from './components/template'
-import Index from './components/index'
-import Image from './components/image'
+import Index from './routes/index'
+import Image from './routes/image'
 
 
 const reducer = combineReducers({

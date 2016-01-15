@@ -7,7 +7,7 @@ class Image extends Component {
         const { images, params } = this.props;
         const image = images[params.image_id];
         return (
-            <div className="image">
+            <div className="image-route">
                 <row className="image-title">
                   <column cols="12">
                     <h1>{image.title}</h1>
@@ -15,7 +15,7 @@ class Image extends Component {
                   </column>
                 </row>
 
-                <row className="center-columns">
+                <row className="image center-columns">
                   <column cols="10">
                     <a href={`${image.src}`}>
                       <img src={`${image.src}`} alt={image.title} />

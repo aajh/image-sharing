@@ -55,39 +55,42 @@ a {
 
     .upload {
         padding-top: 1em;
-        p {
-            text-align: center;
-        }
     }
-
-    .browse {
-        margin-top: 4em;
-
-        > div {
-            /* Copied from kube/blocks.less */
-            @media (min-width: @breakpoint-small) {
-                width: 25% - @grid-gap;
-            }
-            @media (min-width: @breakpoint-medium) {
-                width: 20% - @grid-gap;
-            }
-            @media (min-width: @breakpoint-large) {
-                width: 16.6% - @grid-gap;
-            }
-        }
-
-        > * > div {
-            .height-to-width;
-        }
-        img {
-            min-width: 100%;
-            min-height: 100%;
-            overflow: hidden;
-        }
+    .image-browser {
+        padding-top: 4em;
     }
 }
 
-.image {
+.upload {
+    p {
+        text-align: center;
+    }
+}
+
+.image-browser {
+    > div {
+        /* Copied from kube/blocks.less */
+        @media (min-width: @breakpoint-small) {
+            width: 25% - @grid-gap;
+        }
+        @media (min-width: @breakpoint-medium) {
+            width: 20% - @grid-gap;
+        }
+        @media (min-width: @breakpoint-large) {
+            width: 16.6% - @grid-gap;
+        }
+    }
+    > * > div {
+        .height-to-width;
+    }
+    img {
+        min-width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+    }
+}
+
+.image-route {
     .image-title {
         margin-bottom: 0.5em;
 
@@ -99,5 +102,8 @@ a {
             font-weight: 300;
             margin-top: -0.2em;
         }
+    }
+    .image {
+        text-align: center;
     }
 }
