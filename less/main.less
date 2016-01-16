@@ -17,7 +17,7 @@ a {
     color: #ff63be;
 }
 
-/* A hack to get square crop for the images */
+/* A hack to get square elements */
 .height-to-width {
     display: inline-block;
     position: relative;
@@ -65,6 +65,20 @@ a {
     p {
         text-align: center;
     }
+    row.upload-row {
+        background-color: rgb(241,241,241);
+        padding: 2em 0;
+
+        @media (min-width: @breakpoint-small) {
+            .image-container {
+                .height-to-width;
+
+                .image-centering {
+                    .vertical-align;
+                }
+            };
+        }
+    }
 }
 
 .image-browser {
@@ -79,9 +93,10 @@ a {
         @media (min-width: @breakpoint-large) {
             width: 16.6% - @grid-gap;
         }
-    }
-    > * > div {
-        .height-to-width;
+
+        @media (max-width: @breakpoint-small) {
+            margin-left: 0;
+        }
     }
     img {
         min-width: 100%;

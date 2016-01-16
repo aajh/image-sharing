@@ -5,12 +5,12 @@ import { Link } from 'react-router'
 import Upload from '../components/upload'
 import ImageBrowser from '../components/image-browser'
 
-import { selectImage } from '../actions/upload'
+import { selectImage, resetUpload, startUpload } from '../actions/upload'
 
 class MainTitle extends Component {
     render() {
         return (
-            <row className="title center-columns">
+            <row className="title row-centered">
                 <column cols="6">
                    <h1>AbosUr</h1>
                    <p>Simple image uploads</p>
@@ -27,11 +27,15 @@ class Index extends Component {
             <div className="index-route">
                 <MainTitle />
                 <Upload
-            onFileSelected={ e =>
-              dispatch(selectImage(e.target.files[0]))
+            uploadStage={upload.uploadStage}
+            onFileSelected={ image =>
+                    dispatch(selectImage(image))
             }
             onUploadClick={
-                e => undefined
+                options => dispatch(startUpload(options))
+            }
+            onCancelClick={
+                e => dispatch(resetUpload())
             }
             image={upload.image}
                 />

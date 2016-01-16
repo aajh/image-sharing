@@ -15,7 +15,7 @@ class Image extends Component {
                   </column>
                 </row>
 
-                <row className="image center-columns">
+                <row className="image row-centered">
                   <column cols="10">
                     <a href={`${image.src}`}>
                       <img src={`${image.src}`} alt={image.title} />

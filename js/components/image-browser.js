@@ -5,7 +5,7 @@ class SmallImage extends Component {
     render() {
         const image = this.props.image;
         return (
-            <div><div>
+            <div><div className="height-to-width">
                 <div />
                 <Link to={`/images/${image.id}`}>
                   <img src={image.src} alt={image.title}/>

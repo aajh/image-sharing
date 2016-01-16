@@ -16,7 +16,7 @@ row {
 			margin-right: 0;
 		}
 	}
-	&[end] {
+	&[end], &.row-end {
 		margin-bottom: 0;
 	}
 	&[split] {
@@ -24,12 +24,12 @@ row {
 			margin-right: 0;
 		}
 	}
-	&[centered], &.center-columns {
+	&[centered], &.row-centered {
 		-webkit-justify-content: center;
 		-ms-flex-pack: center;
 		justify-content: center;
 	}
-	&[around] {
+	&[around], &.row-around {
 		-webkit-justify-content: space-around;
 		-ms-flex-pack: distribute;
 		justify-content: space-around;

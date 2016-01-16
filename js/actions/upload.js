@@ -1,7 +1,14 @@
 export const IMAGE_UPLOAD_SELECT_IMAGE = 'IMAGE_UPLOAD_SELECT_IMAGE';
 export const IMAGE_UPLOAD_START = 'IMAGE_UPLOAD_START';
 export const IMAGE_UPLOAD_COMPLETE = 'IMAGE_UPLOAD_COMPLETE';
-export const IMAGE_UPLOAD_CANCEL = 'IMAGE_UPLOAD_CANCEL';
+export const IMAGE_UPLOAD_RESET = 'IMAGE_UPLOAD_RESET';
+
+export const UploadStages = {
+    START: 'START',
+    IMAGE_SELECTED: 'IMAGE_SELECTED',
+    UPLOADING: 'UPLOADING',
+    UPLOAD_COMPLETE: 'UPLOAD_COMPLETE'
+}
 
 export function selectImage(image) {
     return {
@@ -11,9 +18,10 @@ export function selectImage(image) {
 }
 
 function getImage(state) {
+    return state.upload.image;
 }
 
-export function startUpload() {
+export function startUpload(options) {
     return (dispatch, getState) => {
         const image = getImage(getState())
 
@@ -25,9 +33,9 @@ export function startUpload() {
 
         let formData = new FormData()
 
-        formData.append('image', this.state.image)
-        formData.append('title', 'lörslärä')
-        formData.append('description', 'Lorem ipsum')
+        formData.append('image', image)
+        formData.append('title', options.title)
+        formData.append('description', options.description)
 
         return fetch('/rest/images', {
             method: 'POST',
@@ -43,8 +51,8 @@ export function completeUpload() {
     }
 }
 
-export function cancelUpload() {
+export function resetUpload() {
     return {
-        type: IMAGE_UPLOAD_CANCEL
+        type: IMAGE_UPLOAD_RESET
     }
 }
