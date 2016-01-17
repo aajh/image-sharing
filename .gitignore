@@ -3,4 +3,4 @@ uploads/
 static/js/bundle.js
 static/css/style.css
 npm-debug.log
-database.sqlite3
+dev.db

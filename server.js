@@ -3,6 +3,7 @@ const multer = require('multer');
 const uuid = require('node-uuid');
 const sqlite3 = require('sqlite3');
 
+const db = new sqlite3.Database('dev.db');
 const app = express();
 
 const acceptedMIMETypes = {
@@ -30,43 +31,28 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, fileFilter });
 
 app.post('/rest/images', upload.single('image'), function(req, res) {
-    const db = new sqlite3.Database('database.sqlite3');
-
-    const today = new Date();
-    const todayISO = today.toISOString().slice(0, 10);
-
-    db.run(`INSERT INTO images (id, title, description, uploaded)
-           VALUES ($id, $title, $description, $uploaded)`, {
+    db.run(`INSERT INTO images (id, title, description)
+           VALUES ($id, $title, $description)`, {
                $id: req.body.id,
                $title: req.body.title,
-               $description: req.body.description,
-               $uploaded: todayISO
-           });
-
-    db.close(function() {
-        res.json({
-            id: req.body.id,
-            title: req.body.title,
-            description: req.body.description,
-            uploadsed: todayISO
-        });
-    });
+               $description: req.body.description
+           })
+      .get('SELECT * FROM images WHERE id = ?', req.body.id, function(err, row) {
+          Object.assign(row, { src: `/${row.id}.jpg` });
+          res.json(row);
+      });
 });
 
 app.get('/rest/images/:id', function(req, res) {
-    const db = new sqlite3.Database('database.sqlite3');
-
     db.get('SELECT * FROM images WHERE id = ?', req.params.id, function(err, row) {
-        Object.assign(row, { url: `/${row.id}.jpg` });
+        Object.assign(row, { src: `/${row.id}.jpg` });
         res.json(row);
     });
 });
 
 app.get('/rest/images', function(req, res) {
-    const db = new sqlite3.Database('database.sqlite3');
-
     db.all('SELECT * FROM images', req.params.id, function(err, rows) {
-        res.json(rows.map(row => Object.assign(row, { url: `/${row.id}.jpg` })));
+        res.json(rows.map(row => Object.assign(row, { src: `/${row.id}.jpg` })));
     });
 });
 
