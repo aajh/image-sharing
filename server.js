@@ -36,8 +36,15 @@ app.post('/rest/images', upload.single('image'), function(req, res) {
                $id: req.body.id,
                $title: req.body.title,
                $description: req.body.description
+           }, function(err) {
+               if (err !== null) {
+                   return res.status(500).end();
+               }
            })
       .get('SELECT * FROM images WHERE id = ?', req.body.id, function(err, row) {
+          if (err !== null || row === undefined) {
+              return res.status(500).end();
+          }
           Object.assign(row, { src: `/${row.id}.jpg` });
           res.json(row);
       });
@@ -45,6 +52,12 @@ app.post('/rest/images', upload.single('image'), function(req, res) {
 
 app.get('/rest/images/:id', function(req, res) {
     db.get('SELECT * FROM images WHERE id = ?', req.params.id, function(err, row) {
+        if (err !== null) {
+            return res.status(500).end();
+        }
+        if (row === undefined) {
+            return res.status(404).end();
+        }
         Object.assign(row, { src: `/${row.id}.jpg` });
         res.json(row);
     });
@@ -52,7 +65,32 @@ app.get('/rest/images/:id', function(req, res) {
 
 app.get('/rest/images', function(req, res) {
     db.all('SELECT * FROM images', req.params.id, function(err, rows) {
+        if (err !== null) {
+            return res.status(500).end();
+        }
         res.json(rows.map(row => Object.assign(row, { src: `/${row.id}.jpg` })));
+    });
+});
+
+app.post('/rest/images/:image_id/comments', function(req, res) {
+    db.run(`INSERT INTO comments (image_id, username, comment)
+            VALUES ($image_id, $username, $comment)`, {
+                $image_id: req.params.image_id,
+                $username: req.query.username,
+                $comment: req.query.comment
+            }, function(err) {
+                if (err !== null) {
+                    return res.status(500).end();
+                }
+                res.send('OK');
+            });
+});
+app.get('/rest/images/:image_id/comments', function(req, res) {
+    db.all('SELECT * FROM comments WHERE image_id = ?', req.params.image_id, function(err, rows) {
+        if (err !== null) {
+            return res.status(500).end();
+        }
+        res.json(rows);
     });
 });
 
