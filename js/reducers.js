@@ -25,6 +25,11 @@ export const images = createReducer(initialImagesState, {
             [action.payload.id]: action.payload
         });
     },
+    [IMAGE_UPLOAD_COMPLETE](state, action) {
+        return Object.assign({}, state, {
+            [action.image.id]: action.image
+        });
+    },
     [Images.SUCCESS](state, action) {
         const newImages = Object.keys(action.payload).map(k => action.payload[k])
                                 .reduce((imgs, img) => {
@@ -56,7 +61,8 @@ export function upload(state = initialUploadState, action) {
             });
         case IMAGE_UPLOAD_COMPLETE:
             return Object.assign({}, state, {
-                uploadStage: UploadStages.UPLOAD_COMPLETE
+                uploadStage: UploadStages.COMPLETE,
+                uploaded_image_id: action.image.id
             });
         default:
             return state;

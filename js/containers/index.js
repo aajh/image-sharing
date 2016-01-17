@@ -5,7 +5,6 @@ import { Link } from 'react-router'
 import Upload from '../components/upload'
 import ImageBrowser from '../components/image-browser'
 
-import { selectImage, resetUpload, startUpload } from '../actions/upload'
 import { loadImages } from '../actions/images'
 
 class MainTitle extends Component {
@@ -31,16 +30,7 @@ class Index extends Component {
         return (
             <div className="index-route">
               <MainTitle />
-              <Upload
-                  uploadStage={upload.uploadStage}
-                  onFileSelected={ image =>
-                      dispatch(selectImage(image))}
-                  onUploadClick={ options =>
-                      dispatch(startUpload(options))}
-                  onCancelClick={ e =>
-                      dispatch(resetUpload())}
-                  image={upload.image}
-              />
+              <Upload />
               <ImageBrowser images={images} />
             </div>
         );

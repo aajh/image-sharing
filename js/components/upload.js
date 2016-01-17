@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import fetch from 'isomorphic-fetch'
 
-import { UploadStages } from '../actions/upload'
+import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload'
 
-class ImageRow extends Component {
+class UploadRow extends Component {
     constructor() {
         super();
         this.state = {
@@ -76,7 +76,24 @@ class ImageRow extends Component {
     }
 }
 
-export default class Upload extends Component {
+class UploadComplete extends Component {
+    render() {
+        const { uploadedImage } = this.props;
+        return (
+            <row className="upload-complete row-centered">
+              <column cols="6">
+                <p>Upload complete!</p>
+                <p>{ `${document.location.origin}/images/${uploadedImage.id}` }</p>
+              </column>
+            </row>
+        );
+    }
+}
+
+class Upload extends Component {
+    componentWillUnmount() {
+        this.props.dispatch(resetUpload());
+    }
 
     openFileDialog(e) {
         e.preventDefault();
@@ -84,13 +101,19 @@ export default class Upload extends Component {
     }
 
     render() {
-        let imageRow;
-        if(this.props.uploadStage !== UploadStages.START) {
-            imageRow = <ImageRow image={this.props.image}
-                                 uploadStage={this.props.uploadStage}
-                                 onUploadClick={this.props.onUploadClick}
-                                 onCancelClick={this.props.onCancelClick} />
+        const { dispatch, upload, uploadedImage } = this.props;
+        let additionalRow;
+        if(upload.uploadStage !== UploadStages.START &&
+           upload.uploadStage !== UploadStages.COMPLETE) {
+            additionalRow = <UploadRow image={upload.image}
+                                   onUploadClick={options => dispatch(startUpload(options))}
+                                   onCancelClick={() => dispatch(resetUpload())} />
+        } else if (upload.uploadStage === UploadStages.COMPLETE) {
+            additionalRow = <UploadComplete
+                                uploadedImage={uploadedImage}
+                                onResetClick={() => dispatch(resetUpload())} />
         }
+
         return (
             <div className="upload">
               <row className="row-centered">
@@ -101,15 +124,28 @@ export default class Upload extends Component {
                          type="file" accept="image/*"
                          onChange={e => {
                                  if (e.target.files[0]) {
-                                     this.props.onFileSelected(e.target.files[0]);
+                                     dispatch(selectImage(e.target.files[0]));
                                      e.target.value = '';
                                  }
                              }}
                          className="hide" />
                 </column>
               </row>
-              {imageRow}
+              {additionalRow}
             </div>
         );
     }
 }
+
+function select(state) {
+    let uploadedImage;
+    if (state.upload.uploadStage === UploadStages.COMPLETE) {
+        uploadedImage = state.images[state.upload.uploaded_image_id];
+    }
+    return {
+        upload: state.upload,
+        uploadedImage
+    };
+}
+
+export default connect(select)(Upload);

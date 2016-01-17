@@ -7,7 +7,7 @@ export const UploadStages = {
     START: 'START',
     IMAGE_SELECTED: 'IMAGE_SELECTED',
     UPLOADING: 'UPLOADING',
-    UPLOAD_COMPLETE: 'UPLOAD_COMPLETE'
+    COMPLETE: 'UPLOAD_COMPLETE'
 }
 
 export function selectImage(image) {
@@ -41,13 +41,15 @@ export function startUpload(options) {
             method: 'POST',
             body: formData
         })
-            .then(() => dispatch(completeUpload()));
+            .then(res => res.json())
+            .then(json => (dispatch(completeUpload(json))));
     }
 }
 
-export function completeUpload() {
+function completeUpload(image) {
     return {
-        type: IMAGE_UPLOAD_COMPLETE
+        type: IMAGE_UPLOAD_COMPLETE,
+        image
     }
 }
 
