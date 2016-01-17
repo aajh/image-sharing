@@ -80,6 +80,9 @@ a {
                 .image-centering {
                     .vertical-align;
                 }
+                img {
+                    max-height: 100%;
+                }
             };
         }
     }
@@ -109,9 +112,10 @@ a {
         }
     }
     img {
+        object-fit: cover;
         min-width: 100%;
         min-height: 100%;
-        overflow: hidden;
+        max-height: 100%;
     }
 }
 
