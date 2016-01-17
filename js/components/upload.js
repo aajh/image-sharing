@@ -44,22 +44,22 @@ class ImageRow extends Component {
 
     render() {
         return (
-          <row className="upload-row row-around">
-            <column cols="4">
-              <div className="image-container">
-                <div />
-                <div className="image-centering">
-                   <img ref={ref => this.img = ref}/>
+            <row className="upload-row row-around">
+              <column cols="4">
+                <div className="image-container">
+                  <div />
+                  <div className="image-centering">
+                    <img ref={ref => this.img = ref}/>
+                  </div>
                 </div>
-            </div>
-            </column>
-            <column cols="4">
+              </column>
+              <column cols="4">
                 <input type="text" placeholder="Title"
                        value={this.state.title}
                        onChange={this.handleTitleChange.bind(this)}/>
                 <textarea placeholder="Description"
                           onChange={this.handleDescriptionChange.bind(this)}>
-                    {this.state.descprition}
+                  {this.state.descprition}
                 </textarea>
                 <p>
                   <button onClick={this.props.onCancelClick}>
@@ -70,8 +70,8 @@ class ImageRow extends Component {
                     Upload
                   </button>
                 </p>
-            </column>
-          </row>
+              </column>
+            </row>
         );
     }
 }
@@ -86,29 +86,29 @@ export default class Upload extends Component {
     render() {
         let imageRow;
         if(this.props.uploadStage !== UploadStages.START) {
-                imageRow = <ImageRow image={this.props.image}
-                          uploadStage={this.props.uploadStage}
-                          onUploadClick={this.props.onUploadClick}
-                          onCancelClick={this.props.onCancelClick} />
+            imageRow = <ImageRow image={this.props.image}
+                                 uploadStage={this.props.uploadStage}
+                                 onUploadClick={this.props.onUploadClick}
+                                 onCancelClick={this.props.onCancelClick} />
         }
         return (
             <div className="upload">
-            <row className="row-centered">
+              <row className="row-centered">
                 <column cols="6">
                   <p>To upload, drag & drop or <a href="#" onClick={this.openFileDialog.bind(this)}>select</a> an image.
                   </p>
                   <input ref={ref => this.fileInput = ref}
                          type="file" accept="image/*"
                          onChange={e => {
-                             if (e.target.files[0]) {
-                                 this.props.onFileSelected(e.target.files[0]);
-                                 e.target.value = '';
-                             }
-                         }}
+                                 if (e.target.files[0]) {
+                                     this.props.onFileSelected(e.target.files[0]);
+                                     e.target.value = '';
+                                 }
+                             }}
                          className="hide" />
                 </column>
-            </row>
-            {imageRow}
+              </row>
+              {imageRow}
             </div>
         );
     }

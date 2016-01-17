@@ -11,10 +11,10 @@ class MainTitle extends Component {
     render() {
         return (
             <row className="title row-centered">
-                <column cols="6">
-                   <h1>AbosUr</h1>
-                   <p>Simple image uploads</p>
-                </column>
+              <column cols="6">
+                <h1>AbosUr</h1>
+                <p>Simple image uploads</p>
+              </column>
             </row>
         );
     }
@@ -25,21 +25,18 @@ class Index extends Component {
         const { dispatch, images, upload } = this.props;
         return (
             <div className="index-route">
-                <MainTitle />
-                <Upload
-            uploadStage={upload.uploadStage}
-            onFileSelected={ image =>
-                    dispatch(selectImage(image))
-            }
-            onUploadClick={
-                options => dispatch(startUpload(options))
-            }
-            onCancelClick={
-                e => dispatch(resetUpload())
-            }
-            image={upload.image}
-                />
-                <ImageBrowser images={images} />
+              <MainTitle />
+              <Upload
+                  uploadStage={upload.uploadStage}
+                  onFileSelected={ image =>
+                      dispatch(selectImage(image))}
+                  onUploadClick={ options =>
+                      dispatch(startUpload(options))}
+                  onCancelClick={ e =>
+                      dispatch(resetUpload())}
+                  image={upload.image}
+              />
+              <ImageBrowser images={images} />
             </div>
         );
     }

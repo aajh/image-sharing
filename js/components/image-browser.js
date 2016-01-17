@@ -5,12 +5,14 @@ class SmallImage extends Component {
     render() {
         const image = this.props.image;
         return (
-            <div><div className="height-to-width">
+            <div>
+              <div className="height-to-width">
                 <div />
                 <Link to={`/images/${image.id}`}>
                   <img src={image.src} alt={image.title}/>
                 </Link>
-            </div></div>
+              </div>
+            </div>
         );
     }
 }
@@ -23,7 +25,7 @@ export default class ImageBrowser extends Component {
         });
         return (
             <blocks className="image-browser">
-                {images}
+              {images}
             </blocks>
         );
     }

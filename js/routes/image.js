@@ -8,25 +8,25 @@ class Image extends Component {
         const image = images[params.image_id];
         return (
             <div className="image-route">
-                <row className="image-title">
-                  <column cols="12">
-                    <h1>{image.title}</h1>
-                    <p>{image.uploaded.toLocaleDateString()}</p>
-                  </column>
-                </row>
+              <row className="image-title">
+                <column cols="12">
+                  <h1>{image.title}</h1>
+                  <p>{image.uploaded.toLocaleDateString()}</p>
+                </column>
+              </row>
 
-                <row className="image row-centered">
-                  <column cols="10">
-                    <a href={`${image.src}`}>
-                      <img src={`${image.src}`} alt={image.title} />
-                    </a>
-                  </column>
-                </row>
-                <row className="image-description">
-                  <column cols="12">
-                    <p>{image.description}</p>
-                  </column>
-                </row>
+              <row className="image row-centered">
+                <column cols="10">
+                  <a href={`${image.src}`}>
+                    <img src={`${image.src}`} alt={image.title} />
+                  </a>
+                </column>
+              </row>
+              <row className="image-description">
+                <column cols="12">
+                  <p>{image.description}</p>
+                </column>
+              </row>
             </div>
         );
     }

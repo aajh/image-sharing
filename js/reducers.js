@@ -59,22 +59,22 @@ const initialUploadState = {
 
 export function upload(state = initialUploadState, action) {
     switch(action.type) {
-    case IMAGE_UPLOAD_SELECT_IMAGE:
-        return Object.assign({}, state, {
-            uploadStage: UploadStages.IMAGE_SELECTED,
-            image: action.image
-        });
-    case IMAGE_UPLOAD_RESET:
-        return initialUploadState;
-    case IMAGE_UPLOAD_START:
-        return Object.assign({}, state, {
-            uploadStage: UploadStages.UPLOADING
-        });
-    case IMAGE_UPLOAD_COMPLETE:
-        return Object.assign({}, state, {
-            uploadStage: UploadStages.UPLOAD_COMPLETE
-        });
-    default:
-        return state;
+        case IMAGE_UPLOAD_SELECT_IMAGE:
+            return Object.assign({}, state, {
+                uploadStage: UploadStages.IMAGE_SELECTED,
+                image: action.image
+            });
+        case IMAGE_UPLOAD_RESET:
+            return initialUploadState;
+        case IMAGE_UPLOAD_START:
+            return Object.assign({}, state, {
+                uploadStage: UploadStages.UPLOADING
+            });
+        case IMAGE_UPLOAD_COMPLETE:
+            return Object.assign({}, state, {
+                uploadStage: UploadStages.UPLOAD_COMPLETE
+            });
+        default:
+            return state;
     }
 }

@@ -23,25 +23,25 @@ function getImage(state) {
 
 export function startUpload(options) {
     return (dispatch, getState) => {
-        const image = getImage(getState())
+        const image = getImage(getState());
 
         if (image === undefined) {
-            return Promise.resolve()
+            return Promise.resolve();
         }
 
-        dispatch({ type: IMAGE_UPLOAD_START })
+        dispatch({ type: IMAGE_UPLOAD_START });
 
-        let formData = new FormData()
+        let formData = new FormData();
 
-        formData.append('image', image)
-        formData.append('title', options.title)
-        formData.append('description', options.description)
+        formData.append('image', image);
+        formData.append('title', options.title);
+        formData.append('description', options.description);
 
         return fetch('/rest/images', {
             method: 'POST',
             body: formData
         })
-            .then(() => dispatch(completeUpload()))
+            .then(() => dispatch(completeUpload()));
     }
 }
 
