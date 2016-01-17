@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
@@ -22,11 +22,11 @@ class MainTitle extends Component {
 
 class Index extends Component {
     componentDidMount() {
-        this.props.dispatch(loadImages());
+        this.props.loadImages();
     }
 
     render() {
-        const { dispatch, images, upload } = this.props;
+        const { images } = this.props;
         return (
             <div className="index-route">
               <MainTitle />
@@ -36,12 +36,16 @@ class Index extends Component {
         );
     }
 }
+Index.propTypes = {
+    images: PropTypes.array.isRequired,
+    loadImages: PropTypes.func.isRequired
+};
 
 function select(state) {
+    const images = state.entities.images || {};
     return {
-        images: state.images,
-        upload: state.upload
+        images: Object.keys(images).map(k => images[k])
     };
 }
 
-export default connect(select)(Index);
+export default connect(select, { loadImages })(Index);

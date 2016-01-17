@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
@@ -6,11 +6,10 @@ import { loadImage } from '../actions/images'
 
 class Image extends Component {
     render() {
-        const { dispatch, images, params } = this.props;
-        const image = images[params.image_id];
+        const { loadImage, image, params } = this.props;
 
         if (!image) {
-            dispatch(loadImage(params.image_id));
+            loadImage(params.image_id);
             return (
                 <p>Loading...</p>
             );
@@ -41,11 +40,24 @@ class Image extends Component {
         );
     }
 }
+Image.propTypes = {
+    image: PropTypes.object.isRequired,
+    loadImage: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired
+};
 
-function select(state) {
-    return {
-        images: state.images
-    };
+function mapStateToProps(state, props) {
+    const { images, comments } = state.entities;
+    const id = props.params.image_id;
+
+    if (images[id] !== undefined) {
+        return {
+            image: images[id],
+            comments: images[id].comments.map(c => comments[c])
+        };
+    } else {
+        return {};
+    }
 }
 
-export default connect(select)(Image);
+export default connect(mapStateToProps, { loadImage })(Image);

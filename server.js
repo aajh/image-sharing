@@ -2,8 +2,9 @@ const express = require('express');
 const multer = require('multer');
 const uuid = require('node-uuid');
 const sqlite3 = require('sqlite3');
+const Promise = require('bluebird');
 
-const db = new sqlite3.Database('dev.db');
+const db = Promise.promisifyAll(new sqlite3.Database('dev.db'));
 const app = express();
 
 const acceptedMIMETypes = {
@@ -17,10 +18,10 @@ function fileFilter(req, file, cb) {
 }
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination(req, file, cb) {
         cb(null, 'uploads/');
     },
-    filename: function(req, file, cb) {
+    filename(req, file, cb) {
         const extension = acceptedMIMETypes[file.mimetype];
         const id = uuid.v1();
         req.body.id = id;
@@ -30,63 +31,72 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage, fileFilter });
 
-app.post('/rest/images', upload.single('image'), function(req, res) {
-    db.run(`INSERT INTO images (id, title, description)
+app.post('/rest/images', upload.single('image'), (req, res) => {
+    db.runAsync(`INSERT INTO images (id, title, description)
            VALUES ($id, $title, $description)`, {
                $id: req.body.id,
                $title: req.body.title,
                $description: req.body.description
-           }, function(err) {
-               if (err !== null) {
-                   return res.status(500).end();
-               }
            })
-      .get('SELECT * FROM images WHERE id = ?', req.body.id, function(err, row) {
-          if (err !== null || row === undefined) {
-              return res.status(500).end();
+      .then(db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
+      .then(image => {
+          if (image === undefined) {
+              req.status(500).end();
           }
-          Object.assign(row, { src: `/${row.id}.jpg` });
-          res.json(row);
+          Object.assign(image, { src: `/${image.id}.jpg` });
+          res.json(image);
+      })
+      .catch(err => {
+          res.status(500).end();
       });
 });
 
-app.get('/rest/images/:id', function(req, res) {
-    db.get('SELECT * FROM images WHERE id = ?', req.params.id, function(err, row) {
-        if (err !== null) {
-            return res.status(500).end();
-        }
-        if (row === undefined) {
-            return res.status(404).end();
-        }
-        Object.assign(row, { src: `/${row.id}.jpg` });
-        res.json(row);
-    });
+app.get('/rest/images', (req, res) => {
+    db.allAsync('SELECT * FROM images', req.params.id)
+      .map(image => {
+          return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image.id)
+                   .then(comments => {
+                       return Object.assign(image, { src: `/${image.id}.jpg`, comments });
+                   })
+      })
+      .then(images => res.json(images))
+      .catch(err => {
+          return res.status(500).end();
+      });
 });
 
-app.get('/rest/images', function(req, res) {
-    db.all('SELECT * FROM images', req.params.id, function(err, rows) {
-        if (err !== null) {
-            return res.status(500).end();
-        }
-        res.json(rows.map(row => Object.assign(row, { src: `/${row.id}.jpg` })));
-    });
+app.get('/rest/images/:id', (req, res) => {
+    Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id),
+                 db.allAsync('SELECT * FROM comments WHERE image_id = ?', req.params.id),
+                 (image, comments) => {
+                     if (image === undefined) {
+                         return res.status(404).end();
+                     }
+                     Object.assign(image, { src: `/${image.id}.jpg`, comments });
+                     res.json(image);
+                 })
+           .catch(err => {
+               res.status(500).end();
+           });
 });
 
-app.post('/rest/images/:image_id/comments', function(req, res) {
+
+app.post('/rest/images/:image_id/comments', (req, res) => {
     db.run(`INSERT INTO comments (image_id, username, comment)
             VALUES ($image_id, $username, $comment)`, {
                 $image_id: req.params.image_id,
                 $username: req.query.username,
                 $comment: req.query.comment
-            }, function(err) {
+            }, err => {
                 if (err !== null) {
                     return res.status(500).end();
                 }
                 res.send('OK');
             });
 });
-app.get('/rest/images/:image_id/comments', function(req, res) {
-    db.all('SELECT * FROM comments WHERE image_id = ?', req.params.image_id, function(err, rows) {
+
+app.get('/rest/images/:image_id/comments', (req, res) => {
+    db.all('SELECT * FROM comments WHERE image_id = ?', req.params.image_id, (err, rows) => {
         if (err !== null) {
             return res.status(500).end();
         }
@@ -96,11 +106,6 @@ app.get('/rest/images/:image_id/comments', function(req, res) {
 
 app.use(express.static('static'));
 app.use(express.static('uploads'));
+app.get('*', (req, res) => res.sendFile(__dirname + '/static/index.html'));
 
-app.get('*', function (req, res) {
-    res.sendFile(__dirname + '/static/index.html');
-});
-
-app.listen(3000, function() {
-  console.log('Listening on port 3000!');
-});
+app.listen(3000, () => console.log('Listening on port 3000!'));

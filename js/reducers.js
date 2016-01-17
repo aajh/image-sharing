@@ -4,6 +4,7 @@ import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          UploadStages }
 from './actions/upload';
 import { Image, Images } from './actions/images';
+import { Comments } from './actions/comments';
 
 
 function createReducer(initialState, handlers) {
@@ -17,28 +18,12 @@ function createReducer(initialState, handlers) {
 }
 
 
-const initialImagesState = {};
-
-export const images = createReducer(initialImagesState, {
-    [Image.SUCCESS](state, action) {
-        return Object.assign({}, state, {
-            [action.payload.id]: action.payload
-        });
-    },
-    [IMAGE_UPLOAD_COMPLETE](state, action) {
-        return Object.assign({}, state, {
-            [action.image.id]: action.image
-        });
-    },
-    [Images.SUCCESS](state, action) {
-        const newImages = Object.keys(action.payload).map(k => action.payload[k])
-                                .reduce((imgs, img) => {
-                                    imgs[img.id] = img;
-                                    return imgs;
-        }, {});
-        return Object.assign({}, state, newImages);
+export function entities(state = { images: {}, comments: {} }, action) {
+    if (action.payload && action.payload.entities) {
+        return Object.assign({}, state, action.payload.entities);
     }
-});
+    return state;
+}
 
 
 const initialUploadState = {
@@ -46,25 +31,25 @@ const initialUploadState = {
     image: undefined
 };
 
-export function upload(state = initialUploadState, action) {
-    switch(action.type) {
-        case IMAGE_UPLOAD_SELECT_IMAGE:
-            return Object.assign({}, state, {
-                uploadStage: UploadStages.IMAGE_SELECTED,
-                image: action.image
-            });
-        case IMAGE_UPLOAD_RESET:
-            return initialUploadState;
-        case IMAGE_UPLOAD_START:
-            return Object.assign({}, state, {
-                uploadStage: UploadStages.UPLOADING
-            });
-        case IMAGE_UPLOAD_COMPLETE:
-            return Object.assign({}, state, {
-                uploadStage: UploadStages.COMPLETE,
-                uploaded_image_id: action.image.id
-            });
-        default:
-            return state;
+export const upload = createReducer(initialUploadState, {
+    [IMAGE_UPLOAD_SELECT_IMAGE](state, action) {
+        return Object.assign({}, state, {
+            uploadStage: UploadStages.IMAGE_SELECTED,
+            image: action.payload.image
+        });
+    },
+    [IMAGE_UPLOAD_RESET](state, action) {
+        return initialUploadState;
+    },
+    [IMAGE_UPLOAD_START](state, action) {
+        return Object.assign({}, state, {
+            uploadStage: UploadStages.UPLOADING
+        });
+    },
+    [IMAGE_UPLOAD_COMPLETE](state, action) {
+        return Object.assign({}, state, {
+            uploadStage: UploadStages.COMPLETE,
+            uploaded_image_id: action.payload.image
+        });
     }
-}
+});

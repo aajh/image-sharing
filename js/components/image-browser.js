@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 
 class SmallImage extends Component {
@@ -16,11 +16,13 @@ class SmallImage extends Component {
         );
     }
 }
+SmallImage.propTypes = {
+    image: PropTypes.object.isRequired
+}
 
 export default class ImageBrowser extends Component {
     render() {
-        const images = Object.keys(this.props.images).map(key => {
-           const i = this.props.images[key];
+        const images = this.props.images.map(i => {
            return <SmallImage image={i} key={i.id} />
         });
         return (
@@ -29,4 +31,7 @@ export default class ImageBrowser extends Component {
             </blocks>
         );
     }
+}
+ImageBrowser.propTypes = {
+    images: PropTypes.array.isRequired
 }

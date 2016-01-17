@@ -1,7 +1,12 @@
+import fetch from 'isomorphic-fetch';
+import { normalize, arrayOf } from 'normalizr';
+import Schemas from '../schemas';
+
 export const IMAGE_UPLOAD_SELECT_IMAGE = 'IMAGE_UPLOAD_SELECT_IMAGE';
 export const IMAGE_UPLOAD_START = 'IMAGE_UPLOAD_START';
 export const IMAGE_UPLOAD_COMPLETE = 'IMAGE_UPLOAD_COMPLETE';
 export const IMAGE_UPLOAD_RESET = 'IMAGE_UPLOAD_RESET';
+
 
 export const UploadStages = {
     START: 'START',
@@ -13,17 +18,16 @@ export const UploadStages = {
 export function selectImage(image) {
     return {
         type: IMAGE_UPLOAD_SELECT_IMAGE,
-        image
+        payload: {
+            image
+        }
     }
 }
 
-function getImage(state) {
-    return state.upload.image;
-}
 
 export function startUpload(options) {
     return (dispatch, getState) => {
-        const image = getImage(getState());
+        const image = getState().upload.image;
 
         if (image === undefined) {
             return Promise.resolve();
@@ -47,9 +51,13 @@ export function startUpload(options) {
 }
 
 function completeUpload(image) {
+    let { result, entities } = normalize(image, Schemas.image);
     return {
         type: IMAGE_UPLOAD_COMPLETE,
-        image
+        payload: {
+            image: result,
+            entities
+        }
     }
 }
 

@@ -1,4 +1,6 @@
 import { CALL_API } from 'redux-api-middleware';
+import { normalize, arrayOf } from 'normalizr';
+import Schemas from '../schemas';
 
 export const Image = {
     REQUEST: 'LOAD_IMAGE_REQUEST',
@@ -18,7 +20,8 @@ export function loadImage(id) {
         [CALL_API]: {
             method: 'GET',
             endpoint: `/rest/images/${id}`,
-            types: [Image.REQUEST, Image.SUCCESS, Image.FAILURE]
+            types: [Image.REQUEST, Image.SUCCESS, Image.FAILURE],
+            transform: (res) => normalize(res, Schemas.image)
         }
     }
 }
@@ -28,7 +31,8 @@ export function loadImages() {
         [CALL_API]: {
             method: 'GET',
             endpoint: `/rest/images/`,
-            types: [Images.REQUEST, Images.SUCCESS, Images.FAILURE]
+            types: [Images.REQUEST, Images.SUCCESS, Images.FAILURE],
+            transform: (res) => normalize(res, arrayOf(Schemas.image))
         }
     }
 }
