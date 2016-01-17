@@ -2,22 +2,32 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
+import { loadImage } from '../actions/images'
+
 class Image extends Component {
     render() {
-        const { images, params } = this.props;
+        const { dispatch, images, params } = this.props;
         const image = images[params.image_id];
+
+        if (!image) {
+            dispatch(loadImage(params.image_id));
+            return (
+                <p>Loading...</p>
+            );
+        }
+
         return (
             <div className="image-route">
               <row className="image-title">
                 <column cols="12">
                   <h1>{image.title}</h1>
-                  <p>{image.uploaded.toLocaleDateString()}</p>
+                  <p>{(new Date(image.uploaded)).toLocaleDateString()}</p>
                 </column>
               </row>
 
               <row className="image row-centered">
                 <column cols="10">
-                  <a href={`${image.src}`}>
+                  <a href={`${image.src}`} target="_blank">
                     <img src={`${image.src}`} alt={image.title} />
                   </a>
                 </column>
@@ -34,7 +44,7 @@ class Image extends Component {
 
 function select(state) {
     return {
-        images: state.images.images
+        images: state.images
     };
 }
 

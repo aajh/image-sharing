@@ -1,55 +1,39 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
          UploadStages }
-from './actions/upload'
+from './actions/upload';
+import { Image, Images } from './actions/images';
 
 
-const initialImagesState = {
-    images: {
-        1: {
-            id: 1,
-            title: "Some flowers",
-            description: "Phasellus pulvinar pharetra odio imperdiet tempus.",
-            uploaded: new Date("2015-12-29"),
-            src: "/img/sample_1.jpg"
-        },
-        2: {
-            id: 2,
-            title: "Red-green plants",
-            description: "Vivamus faucibus fringilla diam, vel aliquam tortor aliquam ut.",
-            uploaded: new Date("2016-01-10"),
-            src: "/img/sample_2.jpg"
-        },
-        3: {
-            id: 3,
-            title: "Building",
-            description: "Donec consectetur ac arcu nec vulputate",
-            uploaded: new Date("2016-01-11"),
-            src: "/img/sample_3.jpg"
-        },
-        4: {
-            id: 4,
-            title: "Lamps",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            uploaded: new Date("2016-01-12"),
-            src: "/img/sample_4.jpg"
-        },
-        5: {
-            id: 5,
-            title: "Yellow",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            uploaded: new Date("2016-01-12"),
-            src: "/img/sample_5.jpg"
+function createReducer(initialState, handlers) {
+    return function reducer(state = initialState, action) {
+        if (handlers.hasOwnProperty(action.type)) {
+            return handlers[action.type](state, action);
+        } else {
+            return state;
         }
-    }
-};
-
-export function images(state = initialImagesState, action) {
-    return state;
+    };
 }
 
 
+const initialImagesState = {};
+
+export const images = createReducer(initialImagesState, {
+    [Image.SUCCESS](state, action) {
+        return Object.assign({}, state, {
+            [action.payload.id]: action.payload
+        });
+    },
+    [Images.SUCCESS](state, action) {
+        const newImages = Object.keys(action.payload).map(k => action.payload[k])
+                                .reduce((imgs, img) => {
+                                    imgs[img.id] = img;
+                                    return imgs;
+        }, {});
+        return Object.assign({}, state, newImages);
+    }
+});
 
 
 const initialUploadState = {

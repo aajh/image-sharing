@@ -6,6 +6,7 @@ import Upload from '../components/upload'
 import ImageBrowser from '../components/image-browser'
 
 import { selectImage, resetUpload, startUpload } from '../actions/upload'
+import { loadImages } from '../actions/images'
 
 class MainTitle extends Component {
     render() {
@@ -21,6 +22,10 @@ class MainTitle extends Component {
 }
 
 class Index extends Component {
+    componentDidMount() {
+        this.props.dispatch(loadImages());
+    }
+
     render() {
         const { dispatch, images, upload } = this.props;
         return (
@@ -44,7 +49,7 @@ class Index extends Component {
 
 function select(state) {
     return {
-        images: state.images.images,
+        images: state.images,
         upload: state.upload
     };
 }
