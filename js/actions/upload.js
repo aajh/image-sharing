@@ -21,7 +21,7 @@ export function selectImage(image) {
         payload: {
             image
         }
-    }
+    };
 }
 
 
@@ -58,11 +58,11 @@ function completeUpload(image) {
             image: result,
             entities
         }
-    }
+    };
 }
 
 export function resetUpload() {
     return {
         type: IMAGE_UPLOAD_RESET
-    }
+    };
 }

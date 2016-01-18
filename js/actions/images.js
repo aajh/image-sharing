@@ -1,5 +1,6 @@
 import { CALL_API, getJSON } from 'redux-api-middleware';
 import { normalize, arrayOf } from 'normalizr';
+import { merge } from 'lodash/object';
 import Schemas from '../schemas';
 
 export const Image = {
@@ -68,7 +69,19 @@ export function loadComments(imageId) {
                                 .then(json =>
                                     json.map(c => Object.assign({}, c, { image: c.image_id })))
                                 .then(json => normalize(json, arrayOf(Schemas.comment)))
-                                .then(payload => Object.assign({}, payload, { imageId }));
+                                .then(json => {
+                                    if (!state.entities.images[imageId]) {
+                                        return json;
+                                    }
+                                    const newImg = Object.assign({},
+                                                                 state.entities.images[imageId],
+                                                                 { comments: json.result });
+                                    return merge({}, json, {
+                                        entities: {
+                                            images: {
+                                                [imageId]: newImg
+                                            }}});
+                                });
                         }
                     }, Comments.FAILURE]
         }

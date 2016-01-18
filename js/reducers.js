@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { merge } from 'lodash/object';
 import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
          UploadStages }
@@ -22,15 +23,8 @@ const initialEntitiesState = {
 };
 
 export function entities(state = initialEntitiesState, action) {
-    let additionalEntities = Object.assign({}, initialEntitiesState);
-    if (action.type === Comments.SUCCESS && state.images[action.payload.imageId]) {
-        const imageId = action.payload.imageId;
-        additionalEntities.images[imageId] = Object.assign({},
-                                                           state.images[imageId],
-                                                           action.payload.result);
-    }
     if (action.payload && action.payload.entities) {
-        return Object.assign(additionalEntities, state, action.payload.entities);
+        return merge({}, state, action.payload.entities);
     }
     return state;
 }

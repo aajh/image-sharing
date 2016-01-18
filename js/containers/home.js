@@ -1,11 +1,11 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
-import Upload from '../components/upload'
-import ImageBrowser from '../components/image-browser'
+import Upload from './upload';
+import ImageBrowser from '../components/image-browser';
 
-import { loadImages } from '../actions/images'
+import { loadImages } from '../actions/images';
 
 class MainTitle extends Component {
     render() {
@@ -20,7 +20,7 @@ class MainTitle extends Component {
     }
 }
 
-class Index extends Component {
+class Home extends Component {
     componentDidMount() {
         this.props.loadImages();
     }
@@ -28,7 +28,7 @@ class Index extends Component {
     render() {
         const { images } = this.props;
         return (
-            <div className="index-route">
+            <div className="home-route">
               <MainTitle />
               <Upload />
               <ImageBrowser images={images} />
@@ -36,7 +36,7 @@ class Index extends Component {
         );
     }
 }
-Index.propTypes = {
+Home.propTypes = {
     images: PropTypes.array.isRequired,
     loadImages: PropTypes.func.isRequired
 };
@@ -48,4 +48,4 @@ function select(state) {
     };
 }
 
-export default connect(select, { loadImages })(Index);
+export default connect(select, { loadImages })(Home);

@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import fetch from 'isomorphic-fetch'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload'
+import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload';
 
 class UploadRow extends Component {
     constructor() {
@@ -103,8 +102,8 @@ class Upload extends Component {
     render() {
         const { dispatch, upload, uploadedImage } = this.props;
         let additionalRow;
-        if(upload.uploadStage !== UploadStages.START &&
-           upload.uploadStage !== UploadStages.COMPLETE) {
+        if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
+            upload.uploadStage === UploadStages.IMAGE_UPLOAD_START) {
             additionalRow = <UploadRow image={upload.image}
                                    onUploadClick={options => dispatch(startUpload(options))}
                                    onCancelClick={() => dispatch(resetUpload())} />

@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
-import { loadImage, loadComments } from '../actions/images'
+import { loadImage, loadComments } from '../actions/images';
 
 class Image extends Component {
     componentWillMount() {
@@ -37,8 +37,8 @@ class Image extends Component {
 
               <row className="image row-centered">
                 <column cols="10">
-                  <a href={`${image.src}`} target="_blank">
-                    <img src={`${image.src}`} alt={image.title} />
+                  <a href={image.src} target="_blank">
+                    <img src={image.src} alt={image.title} />
                   </a>
                 </column>
               </row>
@@ -64,7 +64,7 @@ function mapStateToProps(state, props) {
     const { images, comments } = state.entities;
     const id = props.params.image_id;
 
-    if (images[id]) {
+    if (images && images[id]) {
         return {
             image: images[id],
             comments: (images[id].comments || []).map(c => comments[c])
