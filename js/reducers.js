@@ -3,6 +3,7 @@ import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
          UploadStages }
 from './actions/upload';
+import { Comments } from './actions/images';
 
 
 function createReducer(initialState, handlers) {
@@ -15,10 +16,21 @@ function createReducer(initialState, handlers) {
     };
 }
 
+const initialEntitiesState = {
+    images: {},
+    comments: {}
+};
 
-export function entities(state = { images: {}, comments: {} }, action) {
+export function entities(state = initialEntitiesState, action) {
+    let additionalEntities = Object.assign({}, initialEntitiesState);
+    if (action.type === Comments.SUCCESS && state.images[action.payload.imageId]) {
+        const imageId = action.payload.imageId;
+        additionalEntities.images[imageId] = Object.assign({},
+                                                           state.images[imageId],
+                                                           action.payload.result);
+    }
     if (action.payload && action.payload.entities) {
-        return Object.assign({}, state, action.payload.entities);
+        return Object.assign(additionalEntities, state, action.payload.entities);
     }
     return state;
 }

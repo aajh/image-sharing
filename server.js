@@ -53,12 +53,7 @@ app.post('/rest/images', upload.single('image'), (req, res) => {
 
 app.get('/rest/images', (req, res) => {
     db.allAsync('SELECT * FROM images', req.params.id)
-      .map(image => {
-          return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image.id)
-                   .then(comments => {
-                       return Object.assign(image, { src: `/${image.id}.jpg`, comments });
-                   })
-      })
+      .then(images => images.map(i => Object.assign(i, { src: `/${i.id}.jpg` })))
       .then(images => res.json(images))
       .catch(err => {
           return res.status(500).end();

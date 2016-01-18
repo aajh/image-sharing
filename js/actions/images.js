@@ -1,4 +1,4 @@
-import { CALL_API } from 'redux-api-middleware';
+import { CALL_API, getJSON } from 'redux-api-middleware';
 import { normalize, arrayOf } from 'normalizr';
 import Schemas from '../schemas';
 
@@ -20,8 +20,14 @@ export function loadImage(id) {
         [CALL_API]: {
             method: 'GET',
             endpoint: `/rest/images/${id}`,
-            types: [Image.REQUEST, Image.SUCCESS, Image.FAILURE],
-            transform: (res) => normalize(res, Schemas.image)
+            types: [Image.REQUEST,
+                    {
+                        type: Image.SUCCESS,
+                        payload: (action, state, res) => {
+                            return getJSON(res).then(json => normalize(json, Schemas.image));
+                        }
+                    },
+                    Image.FAILURE]
         }
     }
 }
@@ -31,8 +37,14 @@ export function loadImages() {
         [CALL_API]: {
             method: 'GET',
             endpoint: `/rest/images/`,
-            types: [Images.REQUEST, Images.SUCCESS, Images.FAILURE],
-            transform: (res) => normalize(res, arrayOf(Schemas.image))
+            types: [Images.REQUEST,
+                    {
+                        type: Images.SUCCESS,
+                        payload: (action, state, res) => {
+                            return getJSON(res).then(json => normalize(json, arrayOf(Schemas.image)));
+                        }
+                    },
+                    Images.FAILURE]
         }
     }
 }
@@ -48,8 +60,17 @@ export function loadComments(imageId) {
         [CALL_API]: {
             method: 'GET',
             endpoint: `/rest/images/${imageId}/comments`,
-            types: [Comments.REQUEST, Comments.SUCCESS, Comments.FAILURE],
-            transform: (res) => normalize(res, arrayOf(Schemas.comment))
+            types: [Comments.REQUEST,
+                    {
+                        type: Comments.SUCCESS,
+                        payload: (action, state, res) => {
+                            return getJSON(res)
+                                .then(json =>
+                                    json.map(c => Object.assign({}, c, { image: c.image_id })))
+                                .then(json => normalize(json, arrayOf(Schemas.comment)))
+                                .then(payload => Object.assign({}, payload, { imageId }));
+                        }
+                    }, Comments.FAILURE]
         }
     }
 }

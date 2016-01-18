@@ -9,4 +9,8 @@ Schemas.image.define({
     comments: arrayOf(Schemas.comment)
 });
 
+Schemas.comment.define({
+    image: Schemas.image
+});
+
 export default Schemas;
