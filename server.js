@@ -3,9 +3,13 @@ const multer = require('multer');
 const uuid = require('node-uuid');
 const sqlite3 = require('sqlite3');
 const Promise = require('bluebird');
+const glob = Promise.promisify(require('glob'));
+const path = require('path');
 
 const db = Promise.promisifyAll(new sqlite3.Database('dev.db'));
 const app = express();
+
+
 
 const acceptedMIMETypes = {
     "image/jpeg": ".jpg",
@@ -31,6 +35,39 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage, fileFilter });
 
+
+
+class NotFoundError extends Error {
+}
+
+function getImageWithSrc(image) {
+    return glob(`${__dirname}/uploads/${image.id}.*`)
+        .then(paths => {
+            if (paths.length === 0) {
+                throw new NotFoundError(`Image file for image_id ${image.id} not found.`);
+            }
+            const ext = path.extname(paths[0]);
+            return Object.assign({}, image, { src: `/${image.id}${ext}` });
+        });
+}
+
+function checkNotUndefined(a) {
+    return new Promise((resolve, reject) => {
+        if (a === undefined) {
+            reject(new Error('undefined value'));
+        } else {
+            resolve(a);
+        }
+    })
+}
+
+function getComments(image_id) {
+    return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id);
+}
+
+
+
+
 app.post('/rest/images', upload.single('image'), (req, res) => {
     db.runAsync(`INSERT INTO images (id, title, description)
            VALUES ($id, $title, $description)`, {
@@ -39,46 +76,33 @@ app.post('/rest/images', upload.single('image'), (req, res) => {
                $description: req.body.description
            })
       .then(db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
-      .then(image => {
-          if (image === undefined) {
-              req.status(500).end();
-          }
-          Object.assign(image, { src: `/${image.id}.jpg` });
-          res.json(image);
-      })
-      .catch(err => {
-          res.status(500).end();
-      });
+      .then(checkNotUndefined)
+      .then(getImageWithSrc)
+      .then(image => res.json(image))
+      .catch(err => res.status(500).end());
 });
 
 app.get('/rest/images', (req, res) => {
     db.allAsync('SELECT * FROM images', req.params.id)
-      .then(images => images.map(i => Object.assign(i, { src: `/${i.id}.jpg` })))
+      .map(getImageWithSrc)
       .then(images => res.json(images))
-      .catch(err => {
-          return res.status(500).end();
-      });
+      .catch(err => res.status(500).end());
 });
 
 app.get('/rest/images/:id', (req, res) => {
-    Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id),
+    Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id)
+                   .then(checkNotUndefined)
+                   .then(getImageWithSrc),
                  db.allAsync('SELECT * FROM comments WHERE image_id = ?', req.params.id),
                  (image, comments) => {
-                     if (image === undefined) {
-                         return res.status(404).end();
-                     }
-                     Object.assign(image, { src: `/${image.id}.jpg`, comments });
+                     Object.assign(image, { comments });
                      res.json(image);
                  })
-           .catch(err => {
-               res.status(500).end();
-           });
+           .catch(NotFoundError, err => res.status(404).end())
+           .catch(err => res.status(500).end());
 });
 
 
-function getComments(image_id) {
-    return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id);
-}
 
 app.post('/rest/images/:image_id/comments', (req, res) => {
     db.runAsync(`INSERT INTO comments (image_id, username, comment)
@@ -98,8 +122,10 @@ app.get('/rest/images/:image_id/comments', (req, res) => {
         .catch(err => res.status(500).end());
 });
 
+
+
 app.use(express.static('static'));
 app.use(express.static('uploads'));
-app.get('*', (req, res) => res.sendFile(__dirname + '/static/index.html'));
+app.get('*', (req, res) => res.sendFile(`${__dirname}/static/index.html`));
 
 app.listen(3000, () => console.log('Listening on port 3000!'));
