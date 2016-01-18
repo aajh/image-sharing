@@ -10,6 +10,10 @@ class UploadRow extends Component {
             title: '',
             description: ''
         };
+
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+        this.handleUploadClick = this.handleUploadClick.bind(this);
     }
 
     componentDidMount() {
@@ -42,6 +46,7 @@ class UploadRow extends Component {
     }
 
     render() {
+        const { title, description } = this.state;
         return (
             <row className="upload-row row-around">
               <column cols="4">
@@ -54,17 +59,16 @@ class UploadRow extends Component {
               </column>
               <column cols="4">
                 <input type="text" placeholder="Title"
-                       value={this.state.title}
-                       onChange={this.handleTitleChange.bind(this)}/>
+                       value={title}
+                       onChange={this.handleTitleChange} />
                 <textarea placeholder="Description"
-                          onChange={this.handleDescriptionChange.bind(this)}>
-                  {this.state.descprition}
-                </textarea>
+                          value={description}
+                          onChange={this.handleDescriptionChange} />
                 <p>
                   <button onClick={this.props.onCancelClick}>
                     Cancel
                   </button>
-                  <button onClick={this.handleUploadClick.bind(this)}
+                  <button onClick={this.handleUploadClick}
                           type="primary">
                     Upload
                   </button>

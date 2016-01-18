@@ -4,7 +4,7 @@ import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
          UploadStages }
 from './actions/upload';
-import { Comments } from './actions/images';
+import { PostComment } from './actions/images';
 
 
 function createReducer(initialState, handlers) {
@@ -29,6 +29,12 @@ export function entities(state = initialEntitiesState, action) {
     return state;
 }
 
+const initialLastCommentPostTimeState = Date.now();
+export const lastCommentPostTime = createReducer(initialLastCommentPostTimeState, {
+    [PostComment.SUCCESS](state, action) {
+        return action.payload.timestamp;
+    }
+});
 
 const initialUploadState = {
     uploadStage: UploadStages.START,

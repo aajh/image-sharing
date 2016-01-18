@@ -76,27 +76,26 @@ app.get('/rest/images/:id', (req, res) => {
 });
 
 
+function getComments(image_id) {
+    return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id);
+}
+
 app.post('/rest/images/:image_id/comments', (req, res) => {
-    db.run(`INSERT INTO comments (image_id, username, comment)
+    db.runAsync(`INSERT INTO comments (image_id, username, comment)
             VALUES ($image_id, $username, $comment)`, {
                 $image_id: req.params.image_id,
                 $username: req.query.username,
                 $comment: req.query.comment
-            }, err => {
-                if (err !== null) {
-                    return res.status(500).end();
-                }
-                res.send('OK');
-            });
+            })
+      .then(() => getComments(req.params.image_id))
+      .then(comments => res.json(comments))
+      .catch(err => res.status(500).end());
 });
 
 app.get('/rest/images/:image_id/comments', (req, res) => {
-    db.all('SELECT * FROM comments WHERE image_id = ?', req.params.image_id, (err, rows) => {
-        if (err !== null) {
-            return res.status(500).end();
-        }
-        res.json(rows);
-    });
+    getComments(req.params.image_id)
+        .then(comments => res.json(comments))
+        .catch(err => res.status(500).end());
 });
 
 app.use(express.static('static'));
