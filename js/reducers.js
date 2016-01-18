@@ -3,8 +3,6 @@ import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
          IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
          UploadStages }
 from './actions/upload';
-import { Image, Images } from './actions/images';
-import { Comments } from './actions/comments';
 
 
 function createReducer(initialState, handlers) {
