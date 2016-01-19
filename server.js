@@ -40,6 +40,10 @@ const upload = multer({ storage, fileFilter });
 class NotFoundError extends Error {
 }
 
+function fixTimestamp(timestamp) {
+    return timestamp.split(' ').join('T');
+}
+
 function getImageWithSrc(image) {
     return glob(`${__dirname}/uploads/${image.id}.*`)
         .then(paths => {
@@ -47,7 +51,8 @@ function getImageWithSrc(image) {
                 throw new NotFoundError(`Image file for image_id ${image.id} not found.`);
             }
             const ext = path.extname(paths[0]);
-            return Object.assign({}, image, { src: `/${image.id}${ext}` });
+            const uploaded = fixTimestamp(image.uploaded);
+            return Object.assign({}, image, { src: `/${image.id}${ext}`, uploaded });
         });
 }
 
@@ -62,7 +67,8 @@ function checkNotUndefined(a) {
 }
 
 function getComments(image_id) {
-    return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id);
+    return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id)
+        .map(c => Object.assign({}, c, { timestamp: fixTimestamp(c.timestamp)}));
 }
 
 
@@ -93,7 +99,7 @@ app.get('/rest/images/:id', (req, res) => {
     Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id)
                    .then(checkNotUndefined)
                    .then(getImageWithSrc),
-                 db.allAsync('SELECT * FROM comments WHERE image_id = ?', req.params.id),
+                 getComments(req.params.id),
                  (image, comments) => {
                      Object.assign(image, { comments });
                      res.json(image);
