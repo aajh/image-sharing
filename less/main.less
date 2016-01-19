@@ -5,12 +5,21 @@
 @light-pink: lighten(@pink, 20%);
 @green: color('#80FFC9');
 
-@shadow-size: 0.2em;
+@shadow-size: 0.3em;
 @shadow-color: #909090;
+
+@input-field-margin: 1em;
+
 
 .shadow(@color: white, @direction: to bottom) {
     height: @shadow-size;
     background: linear-gradient(@direction, @shadow-color, @color);
+}
+
+.style-input-field() {
+    margin-bottom: @input-field-margin;
+    font-family: "Avenir Next";
+    line-height: normal;
 }
 
 .full-width-background(@color) {
@@ -54,6 +63,7 @@ body {
     color: #333;
     background: rgb(255,255,253);
     font-family: "Avenir Next";
+    font-size: 12pt;
 }
 
 a {
@@ -62,6 +72,18 @@ a {
 
 button {
     font-family: "Avenir Next";
+}
+
+
+.container {
+    max-width: 70em;
+    margin: auto;
+    padding: 4.8em 6em;
+
+    @media (max-width: @breakpoint-small) {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
 }
 
 .header {
@@ -76,16 +98,17 @@ button {
         width: 100%;
         .shadow;
     }
-}
-
-#mount {
-    max-width: 70em;
-    margin: auto;
-    padding: 4.8em 6em;
-
-    @media (max-width: @breakpoint-small) {
-        padding-left: 1em;
-        padding-right: 1em;
+    row {
+        .container;
+        padding-top: 10.5pt;
+    }
+    a {
+        text-decoration: none;
+    }
+    h2 {
+        font-size: 20pt;
+        font-weight: 300;
+        letter-spacing: 2pt;
     }
 }
 
@@ -114,6 +137,7 @@ button {
         text-align: center;
 
         h1 {
+            margin-left: 8pt;
             font-size: 64pt;
             font-weight: 300;
             letter-spacing: 0.15em;
@@ -122,6 +146,15 @@ button {
             font-size: 13pt;
             margin-top: -0.8em;
             margin-bottom: 0.6em;
+        }
+
+        @media (max-width: 420px) {
+            h1 {
+                font-size: 48pt;
+            }
+            p {
+                margin-top: -16pt;
+            }
         }
     }
 
@@ -144,7 +177,7 @@ button {
         }
     }
     row.upload-row {
-        padding: 2em 0 0 0;
+        padding: 1em 0;
         .full-width-background(@light-pink);
 
         img {
@@ -154,9 +187,7 @@ button {
 
         .upload-inputs {
             input, textarea {
-                margin-bottom: 1em;
-                font-family: "Avenir Next";
-                line-height: normal;
+                .style-input-field;
             }
             input {
                 width: 16em;
@@ -222,15 +253,19 @@ button {
 
 .image-route {
     .image-title {
-        margin-bottom: 0.5em;
+        margin-bottom: 6pt;
+        padding-left: 3pt;
 
         h1 {
+            font-size: 24pt;
             font-weight: 400;
             margin-bottom: 0;
         }
         p {
             font-weight: 300;
-            margin-top: -0.2em;
+            margin-left: 1pt;
+            margin-top: -3pt;
+            margin-bottom: 0;
         }
     }
     .image {
@@ -240,6 +275,39 @@ button {
         ol {
             list-style: none;
             margin: 0 0.5em;
+        }
+        .image-comment {
+            margin-bottom: 23pt;
+            @horizontal-padding: 8pt;
+            h3 {
+                font-size: 16pt;
+                font-weight: 400;
+                margin-bottom: 1pt;
+                margin-left: @horizontal-padding;
+            }
+            .date {
+                float: right;
+                font-size: 11pt;
+                font-weight: 300;
+                position: relative;
+                left: -@horizontal-padding;
+                top: 2pt;
+            }
+            hr {
+                margin-bottom: 5pt;
+            }
+            p {
+                padding-left: (@horizontal-padding + 2pt);
+                padding-right: @horizontal-padding - 1pt;
+            }
+        }
+    }
+    .comment-box {
+        input, textarea {
+            .style-input-field;
+        }
+        button {
+            float: right;
         }
     }
 }

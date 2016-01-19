@@ -63,7 +63,8 @@ class UploadRow extends Component {
                   <input type="text" placeholder="Title"
                          value={title}
                          onChange={this.handleTitleChange} />
-                  <textarea placeholder="Description"
+                  <textarea rows="3"
+                            placeholder="Description"
                             value={description}
                             onChange={this.handleDescriptionChange} />
                   <p>

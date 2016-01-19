@@ -9,7 +9,8 @@ class Comment extends Component {
         const { comment } = this.props;
         return (
             <li className="image-comment">
-              <h3>{comment.username} &mdash; {(new Date(comment.timestamp)).toDateString()}</h3>
+              <h3>{comment.username}<span className="date">{(new Date(comment.timestamp)).toDateString()}</span></h3>
+              <hr/>
               <p>{comment.comment}</p>
             </li>
         );
@@ -44,13 +45,17 @@ class CommentBox extends Component {
     render() {
         const { username, comment } = this.state;
         return (
-            <row className="row-centered">
+            <row className="comment-box row-centered">
               <column cols="6">
                 <input type="text" placeholder="Name"
                        value={username} onChange={this.handleUsernameChange} />
-                <textarea placeholder="Comment"
+                <textarea placeholder="Comment" rows="4"
                           value={comment} onChange={this.handleCommentChange} />
-                <button onClick={this.handlePostClick}>Send</button>
+                <button onClick={this.handlePostClick}
+                        className="button-outline button-upper"
+                        type="primary">
+                  Send
+                </button>
               </column>
             </row>
         );
@@ -93,10 +98,10 @@ class Image extends Component {
 
         return (
             <div className="image-route">
-              <row className="image-title">
-                <column cols="12">
+              <row className="image-title row-centered">
+                <column cols="10">
                   <h1>{image.title}</h1>
-                  <p>{(new Date(image.uploaded)).toLocaleDateString()}</p>
+                  <p>Posted {(new Date(image.uploaded)).toLocaleDateString()}</p>
                 </column>
               </row>
 
@@ -112,13 +117,8 @@ class Image extends Component {
                   <p>{image.description}</p>
                 </column>
               </row>
-              <row className="row-centered">
-                <column cols="6">
-                  <button onClick={this.reloadComments}>Refresh comments</button>
-                </column>
-              </row>
               <row className="image-comments row-centered">
-                <column cols="6">
+                <column cols="7">
                   <ol>{comments.map(c => (<Comment comment={c} key={c.id} />))}</ol>
                 </column>
               </row>
