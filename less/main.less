@@ -1,11 +1,87 @@
 @import "kube/kube.less";
 
+
+@pink: color('#ff63be');
+@light-pink: lighten(@pink, 20%);
+@green: color('#80FFC9');
+
+@shadow-size: 0.2em;
+@shadow-color: #909090;
+
+.shadow(@color: white, @direction: to bottom) {
+    height: @shadow-size;
+    background: linear-gradient(@direction, @shadow-color, @color);
+}
+
+.full-width-background(@color) {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        background-color: @color;
+        left: -1000em;
+        right: -1000em;
+        top: 0;
+        bottom: 0;
+        z-index: -2;
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        left: -1000em;
+        right: -1000em;
+        top: 0;
+        z-index: -1;
+        .shadow(@color);
+    }
+    > :first-child::before {
+        content: '';
+        position: absolute;
+        left: -1000em;
+        right: -1000em;
+        bottom: 0;
+        z-index: -1;
+        .shadow(@color, to top);
+    }
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
 body {
     color: #333;
     background: rgb(255,255,253);
     font-family: "Avenir Next";
+}
 
-    padding: 5em 6em;
+a {
+    color: @pink;
+}
+
+button {
+    font-family: "Avenir Next";
+}
+
+.header {
+    position: relative;
+    background-color: @green;
+    width: 100%;
+    height: 3.5 + @shadow-size;
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        .shadow;
+    }
+}
+
+#mount {
+    max-width: 70em;
+    margin: auto;
+    padding: 4.8em 6em;
 
     @media (max-width: @breakpoint-small) {
         padding-left: 1em;
@@ -13,22 +89,17 @@ body {
     }
 }
 
-a {
-    color: #ff63be;
-}
-
-/* A hack to get square elements */
 .height-to-width {
     display: inline-block;
     position: relative;
     width: 100%;
 
-    /* A dummy div is needed as a first-child */
-    > :first-child {
-        /* This is equal to the parent's width */
-        margin-top: 100%;
+    &::before {
+        display: block;
+        content: '';
+        margin: 100% 0 0 0;
     }
-    > :not(:first-child) {
+    > * {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -50,6 +121,7 @@ a {
         p {
             font-size: 13pt;
             margin-top: -0.8em;
+            margin-bottom: 0.6em;
         }
     }
 
@@ -65,14 +137,48 @@ a {
     p {
         text-align: center;
     }
+    > row:first-child {
+        margin-bottom: 2.5em;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
     row.upload-row {
-        background-color: rgb(241,241,241);
-        padding: 2em 0;
+        padding: 2em 0 0 0;
+        .full-width-background(@light-pink);
+
+        img {
+            border: 10pt solid rgba(255,255,255,0.9);
+            box-sizing: border-box;
+        }
+
+        .upload-inputs {
+            input, textarea {
+                margin-bottom: 1em;
+                font-family: "Avenir Next";
+                line-height: normal;
+            }
+            input {
+                width: 16em;
+            }
+            p {
+                height: @input-height;
+                margin: 0;
+            }
+            button:first-child {
+                float: none;
+                float: left;
+            }
+            button:last-child {
+                float: none;
+                float: right;
+            }
+
+        }
 
         @media (min-width: @breakpoint-small) {
             .image-container {
                 .height-to-width;
-
                 .image-centering {
                     .vertical-align;
                 }
@@ -80,6 +186,12 @@ a {
                     max-height: 100%;
                 }
             };
+            .upload-inputs {
+                .height-to-width;
+                > div {
+                    .vertical-align;
+                }
+            }
         }
     }
 }
@@ -93,11 +205,9 @@ a {
         @media (min-width: @breakpoint-medium) {
             width: 20% - @grid-gap;
         }
-        @media (min-width: @breakpoint-large) {
-            width: 16.6% - @grid-gap;
-        }
 
         @media (max-width: @breakpoint-small) {
+            width: 100%;
             margin-left: 0;
         }
     }
@@ -106,6 +216,7 @@ a {
         min-width: 100%;
         min-height: 100%;
         max-height: 100%;
+        max-width: 100%;
     }
 }
 

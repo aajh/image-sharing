@@ -44,7 +44,7 @@ Home.propTypes = {
 function select(state) {
     const images = state.entities.images || {};
     return {
-        images: Object.keys(images).map(k => images[k])
+        images: Object.keys(images).map(k => images[k]).sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded))
     };
 }
 

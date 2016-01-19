@@ -7,7 +7,6 @@ class SmallImage extends Component {
         return (
             <div>
               <div className="height-to-width">
-                <div />
                 <Link to={`/images/${image.id}`}>
                   <img src={image.src} alt={image.title}/>
                 </Link>

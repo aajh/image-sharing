@@ -49,30 +49,37 @@ class UploadRow extends Component {
         const { title, description } = this.state;
         return (
             <row className="upload-row row-around">
-              <column cols="4">
+              <column cols="5">
                 <div className="image-container">
-                  <div />
                   <div className="image-centering">
                     <img ref={ref => this.img = ref}/>
                   </div>
                 </div>
               </column>
-              <column cols="4">
-                <input type="text" placeholder="Title"
-                       value={title}
-                       onChange={this.handleTitleChange} />
-                <textarea placeholder="Description"
-                          value={description}
-                          onChange={this.handleDescriptionChange} />
-                <p>
-                  <button onClick={this.props.onCancelClick}>
-                    Cancel
-                  </button>
-                  <button onClick={this.handleUploadClick}
-                          type="primary">
-                    Upload
-                  </button>
-                </p>
+              <column cols="5">
+                <div className="upload-inputs">
+                  <div>
+                    <div>
+                  <input type="text" placeholder="Title"
+                         value={title}
+                         onChange={this.handleTitleChange} />
+                  <textarea placeholder="Description"
+                            value={description}
+                            onChange={this.handleDescriptionChange} />
+                  <p>
+                    <button onClick={this.props.onCancelClick}
+                            className="button-outline button-upper">
+                      Cancel
+                    </button>
+                    <button onClick={this.handleUploadClick}
+                            className="button-outline button-upper"
+                            type="primary">
+                      Upload
+                    </button>
+                  </p>
+                    </div>
+                  </div>
+                </div>
               </column>
             </row>
         );
