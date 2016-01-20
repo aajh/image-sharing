@@ -101,7 +101,7 @@ class ImageRoute extends Component {
         return (
             <div className="image-route">
               <Image image={image} />
-              <row className="comment-box row-centered">
+              <row className="row-centered">
                 <column cols="6">
                   <InputBox
                       key={lastCommentPostTime}
