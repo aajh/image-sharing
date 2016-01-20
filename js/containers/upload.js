@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload';
+import UploadSelector from '../components/upload-selector';
 
 class UploadRow extends Component {
     constructor() {
@@ -30,7 +31,7 @@ class UploadRow extends Component {
 
         let reader = new FileReader();
         reader.onload = (e => this.img.src = e.target.result);
-        reader.readAsDataURL(this.props.image);
+        reader.readAsDataURL(this.props.imageFile);
     }
 
     handleTitleChange(e) {
@@ -86,6 +87,11 @@ class UploadRow extends Component {
         );
     }
 }
+UploadRow.propTypes = {
+    imageFile: PropTypes.instanceOf(Blob).isRequired,
+    onCancelClick: PropTypes.func.isRequired,
+    onUploadClick: PropTypes.func.isRequired
+}
 
 class UploadComplete extends Component {
     render() {
@@ -100,15 +106,14 @@ class UploadComplete extends Component {
         );
     }
 }
+UploadComplete.propTypes = {
+    uploadedImage: PropTypes.object.isRequired
+}
+
 
 class Upload extends Component {
     componentWillUnmount() {
         this.props.dispatch(resetUpload());
-    }
-
-    openFileDialog(e) {
-        e.preventDefault();
-        this.fileInput.click();
     }
 
     render() {
@@ -116,7 +121,7 @@ class Upload extends Component {
         let additionalRow;
         if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
             upload.uploadStage === UploadStages.UPLOADING) {
-            additionalRow = <UploadRow image={upload.image}
+            additionalRow = <UploadRow imageFile={upload.imageFile}
                                    onUploadClick={options => dispatch(startUpload(options))}
                                    onCancelClick={() => dispatch(resetUpload())} />
         } else if (upload.uploadStage === UploadStages.COMPLETE) {
@@ -127,31 +132,24 @@ class Upload extends Component {
 
         return (
             <div className="upload">
-              <row className="row-centered">
-                <column cols="6">
-                  <p>To upload, drag & drop or <a href="#" onClick={this.openFileDialog.bind(this)}>select</a> an image.
-                  </p>
-                  <input ref={ref => this.fileInput = ref}
-                         type="file" accept="image/*"
-                         onChange={e => {
-                                 if (e.target.files[0]) {
-                                     dispatch(selectImage(e.target.files[0]));
-                                     e.target.value = '';
-                                 }
-                             }}
-                         className="hide" />
-                </column>
-              </row>
+              <UploadSelector onImageFileSelected=
+                              {file =>
+                                  dispatch(selectImage(file))}
+                />
               {additionalRow}
             </div>
         );
     }
 }
+Upload.propTypes = {
+    upload: PropTypes.object.isRequired,
+    uploadedImage: PropTypes.object
+}
 
 function select(state) {
     let uploadedImage;
     if (state.upload.uploadStage === UploadStages.COMPLETE) {
-        uploadedImage = state.entities.images[state.upload.uploaded_image_id];
+        uploadedImage = state.entities.images[state.upload.uploadedImageId];
     }
     return {
         upload: state.upload,

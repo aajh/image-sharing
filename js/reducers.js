@@ -35,14 +35,15 @@ export const lastCommentPostTime = createReducer(initialLastCommentPostTimeState
 
 const initialUploadState = {
     uploadStage: UploadStages.START,
-    image: undefined
+    imageFile: undefined,
+    uploadedImageId: undefined
 };
 
 export const upload = createReducer(initialUploadState, {
     [Upload.SELECT_IMAGE](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.IMAGE_SELECTED,
-            image: action.payload.image
+            imageFile: action.payload.image
         });
     },
     [Upload.RESET](state, action) {
@@ -56,7 +57,7 @@ export const upload = createReducer(initialUploadState, {
     [Upload.SUCCESS](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.COMPLETE,
-            uploaded_image_id: action.payload.result
+            uploadedImageId: action.payload.result
         });
     }
 });
