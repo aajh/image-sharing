@@ -13,7 +13,7 @@ class MainTitle extends Component {
             <row className="title row-centered">
               <column cols="6">
                 <h1>AbosUr</h1>
-                <p>Simple image uploads</p>
+                <p>Simple image sharing</p>
               </column>
             </row>
         );
