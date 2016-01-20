@@ -1,12 +1,14 @@
-import fetch from 'isomorphic-fetch';
-import { normalize, arrayOf } from 'normalizr';
+import { CALL_API, getJSON } from 'redux-api-middleware';
+import { normalize } from 'normalizr';
 import Schemas from '../schemas';
 
-export const IMAGE_UPLOAD_SELECT_IMAGE = 'IMAGE_UPLOAD_SELECT_IMAGE';
-export const IMAGE_UPLOAD_START = 'IMAGE_UPLOAD_START';
-export const IMAGE_UPLOAD_COMPLETE = 'IMAGE_UPLOAD_COMPLETE';
-export const IMAGE_UPLOAD_RESET = 'IMAGE_UPLOAD_RESET';
-
+export const Upload = {
+    SELECT_IMAGE: 'IMAGE_UPLOAD_SELECT_IMAGE',
+    START: 'IMAGE_UPLOAD_START',
+    SUCCESS: 'IMAGE_UPLOAD_SUCCESS',
+    FAILURE: 'IMAGE_UPLOAD_FAILURE',
+    RESET: 'IMAGE_UPLOAD_RESET'
+}
 
 export const UploadStages = {
     START: 'START',
@@ -17,7 +19,7 @@ export const UploadStages = {
 
 export function selectImage(image) {
     return {
-        type: IMAGE_UPLOAD_SELECT_IMAGE,
+        type: Upload.SELECT_IMAGE,
         payload: {
             image
         }
@@ -27,42 +29,36 @@ export function selectImage(image) {
 
 export function startUpload(options) {
     return (dispatch, getState) => {
-        const image = getState().upload.image;
-
+        const { upload } = getState();
+        const image = upload.image;
         if (image === undefined) {
-            return Promise.resolve();
+            return;
         }
 
-        dispatch({ type: IMAGE_UPLOAD_START });
-
         let formData = new FormData();
-
-        formData.append('image', image);
+        formData.append('image', upload.image);
         formData.append('title', options.title);
         formData.append('description', options.description);
 
-        return fetch('/rest/images', {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(json => (dispatch(completeUpload(json))));
-    }
-}
-
-function completeUpload(image) {
-    let { result, entities } = normalize(image, Schemas.image);
-    return {
-        type: IMAGE_UPLOAD_COMPLETE,
-        payload: {
-            image: result,
-            entities
-        }
+        dispatch({
+            [CALL_API]: {
+                method: 'POST',
+                endpoint: '/rest/images',
+                body: formData,
+                types: [Upload.START,
+                        {
+                            type: Upload.SUCCESS,
+                            payload: (action, state, res) =>
+                                getJSON(res).then(json => normalize(json, Schemas.image))
+                        },
+                        Upload.FAILURE]
+            }
+        });
     };
 }
 
 export function resetUpload() {
     return {
-        type: IMAGE_UPLOAD_RESET
+        type: Upload.RESET
     };
 }

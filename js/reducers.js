@@ -1,9 +1,6 @@
 import { combineReducers } from 'redux';
 import { merge } from 'lodash/object';
-import { IMAGE_UPLOAD_SELECT_IMAGE, IMAGE_UPLOAD_START,
-         IMAGE_UPLOAD_COMPLETE, IMAGE_UPLOAD_RESET,
-         UploadStages }
-from './actions/upload';
+import { Upload, UploadStages } from './actions/upload';
 import { PostComment } from './actions/images';
 
 
@@ -42,24 +39,24 @@ const initialUploadState = {
 };
 
 export const upload = createReducer(initialUploadState, {
-    [IMAGE_UPLOAD_SELECT_IMAGE](state, action) {
+    [Upload.SELECT_IMAGE](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.IMAGE_SELECTED,
             image: action.payload.image
         });
     },
-    [IMAGE_UPLOAD_RESET](state, action) {
+    [Upload.RESET](state, action) {
         return initialUploadState;
     },
-    [IMAGE_UPLOAD_START](state, action) {
+    [Upload.START](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.UPLOADING
         });
     },
-    [IMAGE_UPLOAD_COMPLETE](state, action) {
+    [Upload.SUCCESS](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.COMPLETE,
-            uploaded_image_id: action.payload.image
+            uploaded_image_id: action.payload.result
         });
     }
 });

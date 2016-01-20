@@ -81,7 +81,7 @@ app.post('/rest/images', upload.single('image'), (req, res) => {
                $title: req.body.title,
                $description: req.body.description
            })
-      .then(db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
+      .then(() => db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
       .then(checkNotUndefined)
       .then(getImageWithSrc)
       .then(image => res.json(image))

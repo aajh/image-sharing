@@ -115,7 +115,7 @@ class Upload extends Component {
         const { dispatch, upload, uploadedImage } = this.props;
         let additionalRow;
         if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
-            upload.uploadStage === UploadStages.IMAGE_UPLOAD_START) {
+            upload.uploadStage === UploadStages.UPLOADING) {
             additionalRow = <UploadRow image={upload.image}
                                    onUploadClick={options => dispatch(startUpload(options))}
                                    onCancelClick={() => dispatch(resetUpload())} />
@@ -151,7 +151,7 @@ class Upload extends Component {
 function select(state) {
     let uploadedImage;
     if (state.upload.uploadStage === UploadStages.COMPLETE) {
-        uploadedImage = state.images[state.upload.uploaded_image_id];
+        uploadedImage = state.entities.images[state.upload.uploaded_image_id];
     }
     return {
         upload: state.upload,

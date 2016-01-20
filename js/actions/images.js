@@ -42,9 +42,8 @@ export function loadImages() {
             types: [Images.REQUEST,
                     {
                         type: Images.SUCCESS,
-                        payload: (action, state, res) => {
-                            return getJSON(res).then(json => normalize(json, arrayOf(Schemas.image)));
-                        }
+                        payload: (action, state, res) =>
+                            getJSON(res).then(json => normalize(json, arrayOf(Schemas.image)))
                     },
                     Images.FAILURE]
         }
