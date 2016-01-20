@@ -19,7 +19,7 @@ export default class UploadSelector extends Component {
                 <p>To upload, drag & drop or <a href="#" onClick={this.openFileDialog}>select</a> an image.
                 </p>
                 <input ref={ref => this.fileInput = ref}
-                       type="file" accept="image/*"
+                       type="file" accept="image/jpeg, image/png, image/gif"
                        onChange={e => {
                                if (e.target.files[0]) {
                                    onImageFileSelected(e.target.files[0]);
