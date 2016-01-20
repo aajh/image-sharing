@@ -1,0 +1,62 @@
+@import "general.less";
+
+.upload {
+    p {
+        text-align: center;
+    }
+    > row:first-child {
+        margin-bottom: 2.5em;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    row.upload-row {
+        padding: 1em 0;
+        .full-width-background(@light-pink);
+
+        img {
+            border: 10pt solid rgba(255,255,255,0.9);
+            box-sizing: border-box;
+        }
+
+        .upload-inputs {
+            input, textarea {
+                .style-input-field;
+            }
+            input {
+                width: 16em;
+            }
+            p {
+                height: @input-height;
+                margin: 0;
+            }
+            button:first-child {
+                float: none;
+                float: left;
+            }
+            button:last-child {
+                float: none;
+                float: right;
+            }
+
+        }
+
+        @media (min-width: @breakpoint-small) {
+            .image-container {
+                .height-to-width;
+                .image-centering {
+                    .vertical-align;
+                }
+                img {
+                    max-height: 100%;
+                }
+            };
+            .upload-inputs {
+                .height-to-width;
+                > div {
+                    .vertical-align;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+@import "general.less";
+
+.image-browser {
+    > div {
+        /* Copied from kube/blocks.less */
+        @media (min-width: @breakpoint-small) {
+            width: 25% - @grid-gap;
+        }
+        @media (min-width: @breakpoint-medium) {
+            width: 20% - @grid-gap;
+        }
+
+        @media (max-width: @breakpoint-small) {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+    img {
+        object-fit: cover;
+        min-width: 100%;
+        min-height: 100%;
+        max-height: 100%;
+        max-width: 100%;
+    }
+}

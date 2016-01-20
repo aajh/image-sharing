@@ -1,0 +1,95 @@
+@import "kube/kube.less";
+
+@pink: color('#ff63be');
+@light-pink: lighten(@pink, 20%);
+@green: color('#80FFC9');
+
+@shadow-size: 0.3em;
+@shadow-color: #909090;
+
+@input-field-margin: 1em;
+
+
+.shadow(@color: white, @direction: to bottom) {
+    height: @shadow-size;
+    background: linear-gradient(@direction, @shadow-color, @color);
+}
+
+.style-input-field() {
+    margin-bottom: @input-field-margin;
+    font-family: "Avenir Next";
+    line-height: normal;
+}
+
+.full-width-background(@color) {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        background-color: @color;
+        left: -1000em;
+        right: -1000em;
+        top: 0;
+        bottom: 0;
+        z-index: -2;
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        left: -1000em;
+        right: -1000em;
+        top: 0;
+        z-index: -1;
+        .shadow(@color);
+    }
+    > :first-child::before {
+        content: '';
+        position: absolute;
+        left: -1000em;
+        right: -1000em;
+        bottom: 0;
+        z-index: -1;
+        .shadow(@color, to top);
+    }
+}
+
+.height-to-width {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+
+    &::before {
+        display: block;
+        content: '';
+        margin: 100% 0 0 0;
+    }
+    > * {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+
+
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    color: #333;
+    background: rgb(255,255,253);
+    font-family: "Avenir Next";
+    font-size: 12pt;
+}
+
+a {
+    color: @pink;
+}
+
+button {
+    font-family: "Avenir Next";
+}

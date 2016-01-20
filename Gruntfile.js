@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         },
         concurrent: {
             watch: {
-                tasks: ['browserify:dev', 'watch'],
+                tasks: ['browserify:dev', 'less', 'watch'],
                 options: {
                     logConcurrentOutput: true
                 }
