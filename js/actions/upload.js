@@ -30,13 +30,13 @@ export function selectImage(image) {
 export function startUpload(options) {
     return (dispatch, getState) => {
         const { upload } = getState();
-        const image = upload.image;
-        if (image === undefined) {
+        const imageFile = upload.imageFile;
+        if (imageFile === undefined) {
             return;
         }
 
         let formData = new FormData();
-        formData.append('image', upload.image);
+        formData.append('image', imageFile);
         formData.append('title', options.title);
         formData.append('description', options.description);
 

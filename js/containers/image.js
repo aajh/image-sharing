@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { loadImage, loadComments, postComment } from '../actions/images';
-import CommentBox from '../components/comment-box';
+import InputBox from '../components/input-box';
 
 class Comment extends Component {
     render() {
@@ -101,7 +101,15 @@ class ImageRoute extends Component {
         return (
             <div className="image-route">
               <Image image={image} />
-              <CommentBox key={lastCommentPostTime} onPostClick={this.postComment} />
+              <row className="comment-box row-centered">
+                <column cols="6">
+                  <InputBox
+                      key={lastCommentPostTime}
+                      onPostClick={this.postComment}
+                      shortName="username"
+                      longName="comment"/>
+                </column>
+              </row>
             </div>
         );
     }

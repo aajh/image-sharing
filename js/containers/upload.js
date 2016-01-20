@@ -3,20 +3,9 @@ import { connect } from 'react-redux';
 
 import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload';
 import UploadSelector from '../components/upload-selector';
+import InputBox from '../components/input-box';
 
 class UploadRow extends Component {
-    constructor() {
-        super();
-        this.state = {
-            title: '',
-            description: ''
-        };
-
-        this.handleTitleChange = this.handleTitleChange.bind(this);
-        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-        this.handleUploadClick = this.handleUploadClick.bind(this);
-    }
-
     componentDidMount() {
         this.showImage();
     }
@@ -34,20 +23,8 @@ class UploadRow extends Component {
         reader.readAsDataURL(this.props.imageFile);
     }
 
-    handleTitleChange(e) {
-        this.setState({title: e.target.value});
-    }
-    handleDescriptionChange(e) {
-        this.setState({description: e.target.value});
-    }
-
-
-    handleUploadClick() {
-        this.props.onUploadClick(this.state);
-    }
-
     render() {
-        const { title, description } = this.state;
+        const { onUploadClick, onCancelClick } = this.props;
         return (
             <row className="upload-row row-around">
               <column cols="5">
@@ -60,26 +37,12 @@ class UploadRow extends Component {
               <column cols="5">
                 <div className="upload-inputs">
                   <div>
-                    <div>
-                  <input type="text" placeholder="Title"
-                         value={title}
-                         onChange={this.handleTitleChange} />
-                  <textarea rows="3"
-                            placeholder="Description"
-                            value={description}
-                            onChange={this.handleDescriptionChange} />
-                  <p>
-                    <button onClick={this.props.onCancelClick}
-                            className="button-outline button-upper">
-                      Cancel
-                    </button>
-                    <button onClick={this.handleUploadClick}
-                            className="button-outline button-upper"
-                            type="primary">
-                      Upload
-                    </button>
-                  </p>
-                    </div>
+                    <InputBox onPostClick={onUploadClick}
+                              postName="Upload"
+                              onCancelClick={onCancelClick}
+                              cancelName="Cancel"
+                              shortName="title"
+                              longName="description"/>
                   </div>
                 </div>
               </column>
