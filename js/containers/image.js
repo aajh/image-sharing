@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { loadImage, loadComments, postComment } from '../actions/images';
+import CommentBox from '../components/comment-box';
 
 class Comment extends Component {
     render() {
@@ -20,88 +21,17 @@ Comment.propTypes = {
     comment: PropTypes.object.isRequired
 };
 
-class CommentBox extends Component {
-    constructor() {
-        super();
-        this.state = {
-            username: '',
-            comment: ''
-        };
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handleCommentChange = this.handleCommentChange.bind(this);
-        this.handlePostClick = this.handlePostClick.bind(this);
-    }
-
-    handleUsernameChange(e) {
-        this.setState({ username: e.target.value });
-    }
-    handleCommentChange(e) {
-        this.setState({ comment: e.target.value });
-    }
-    handlePostClick() {
-        this.props.onPostClick(this.state);
-    }
-
-    render() {
-        const { username, comment } = this.state;
-        return (
-            <row className="comment-box row-centered">
-              <column cols="6">
-                <input type="text" placeholder="Name"
-                       value={username} onChange={this.handleUsernameChange} />
-                <textarea placeholder="Comment" rows="4"
-                          value={comment} onChange={this.handleCommentChange} />
-                <button onClick={this.handlePostClick}
-                        className="button-outline button-upper"
-                        type="primary">
-                  Send
-                </button>
-              </column>
-            </row>
-        );
-    }
-}
-CommentBox.propTypes = {
-    onPostClick: PropTypes.func.isRequired
-};
-
-
 class Image extends Component {
-    constructor() {
-        super();
-        this.reloadComments = this.reloadComments.bind(this);
-        this.postComment = this.postComment.bind(this);
-    }
-    componentWillMount() {
-        const { loadImage, params, image } = this.props;
-        loadImage(params.image_id);
-    }
-
-    reloadComments() {
-        const { loadComments, image } = this.props;
-        if (image) {
-            loadComments(image.id);
-        }
-    }
-    postComment(comment) {
-        this.props.postComment(Object.assign({}, comment, { image_id: this.props.image.id }));
-    }
-
     render() {
-        const { image, comments, lastCommentPostTime } = this.props;
-
-        if (!image) {
-            return (
-                <p>Loading...</p>
-            );
-        }
-
+        const { image } = this.props;
         return (
-            <div className="image-route">
+            <div>
               <row className="image-title row-centered">
                 <column cols="10">
-                  <h1>{image.title}</h1>
-                  <p>Posted {(new Date(image.uploaded)).toLocaleDateString()}</p>
+                  <h1>
+                    {image.title}
+                    <span className="date">Posted {(new Date(image.uploaded)).toLocaleDateString()}</span>
+                  </h1>
                 </column>
               </row>
 
@@ -119,33 +49,91 @@ class Image extends Component {
               </row>
               <row className="image-comments row-centered">
                 <column cols="7">
-                  <ol>{comments.map(c => (<Comment comment={c} key={c.id} />))}</ol>
+                  <ol>
+                    {image.comments.map(c =>
+                        (<Comment comment={c} key={c.id} />))}
+                  </ol>
                 </column>
               </row>
-              <CommentBox key={lastCommentPostTime} onPostClick={this.postComment} />
             </div>
         );
     }
 }
 Image.propTypes = {
+    image: PropTypes.object.isRequired
+};
+
+
+class ImageRoute extends Component {
+    constructor() {
+        super();
+        this.reloadComments = this.reloadComments.bind(this);
+        this.postComment = this.postComment.bind(this);
+    }
+
+    componentWillMount() {
+        const { loadImage, imageId } = this.props;
+        loadImage(imageId);
+    }
+
+    reloadComments() {
+        const { loadComments, image } = this.props;
+        if (image) {
+            loadComments(image.id);
+        }
+    }
+
+    postComment(comment) {
+        this.props.postComment(Object.assign({}, comment, {
+            image_id: this.props.image.id
+        }));
+    }
+
+    render() {
+        const { image, lastCommentPostTime } = this.props;
+
+        if (!image) {
+            return (
+                <p>Loading...</p>
+            );
+        }
+
+        return (
+            <div className="image-route">
+              <Image image={image} />
+              <CommentBox key={lastCommentPostTime} onPostClick={this.postComment} />
+            </div>
+        );
+    }
+}
+ImageRoute.propTypes = {
     loadImage: PropTypes.func.isRequired,
     loadComments: PropTypes.func.isRequired,
-    params: PropTypes.object.isRequired
+    lastCommentPostTime: PropTypes.any.isRequired,
+    imageId: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired
 };
 
 function mapStateToProps(state, props) {
     const { images, comments } = state.entities;
     const id = props.params.image_id;
 
+    const imageProps = {
+        lastCommentPostTime: state.lastCommentPostTime,
+        imageId: id
+    };
+
     if (images && images[id]) {
-        return {
-            image: images[id],
-            comments: (images[id].comments || []).map(c => comments[c]),
-            lastCommentPostTime: state.lastCommentPostTime
-        };
+        return Object.assign({}, imageProps, {
+            image: Object.assign({}, images[id], {
+                comments: (images[id].comments || []).map(c => comments[c])
+            })
+        });
     } else {
-        return {};
+        return imageProps;
     }
 }
 
-export default connect(mapStateToProps, { loadImage, loadComments, postComment })(Image);
+export default connect(mapStateToProps, { loadImage, loadComments, postComment })(ImageRoute);
