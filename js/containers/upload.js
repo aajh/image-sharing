@@ -10,7 +10,7 @@ class UploadRow extends Component {
         this.showImage();
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.image !== this.props.image) {
+        if (prevProps.imageFile !== this.props.imageFile) {
             this.showImage();
         }
     }
@@ -54,7 +54,7 @@ UploadRow.propTypes = {
     imageFile: PropTypes.instanceOf(Blob).isRequired,
     onCancelClick: PropTypes.func.isRequired,
     onUploadClick: PropTypes.func.isRequired
-}
+};
 
 class UploadComplete extends Component {
     render() {
@@ -71,7 +71,7 @@ class UploadComplete extends Component {
 }
 UploadComplete.propTypes = {
     uploadedImage: PropTypes.object.isRequired
-}
+};
 
 
 class Upload extends Component {
@@ -107,7 +107,7 @@ class Upload extends Component {
 Upload.propTypes = {
     upload: PropTypes.object.isRequired,
     uploadedImage: PropTypes.object
-}
+};
 
 function select(state) {
     let uploadedImage;
