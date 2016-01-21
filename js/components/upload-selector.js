@@ -3,7 +3,21 @@ import React, { Component, PropTypes } from 'react';
 export default class UploadSelector extends Component {
     constructor() {
         super();
+        this.state = {
+            dragging: false
+        };
         this.openFileDialog = this.openFileDialog.bind(this);
+        this.onDrop = this.onDrop.bind(this);
+        this.onDragOver = this.onDragOver.bind(this);
+        this.onDragEnter = this.onDragEnter.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener('dragenter', this.onDragEnter);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('dragenter', this.onDragEnter);
     }
 
     openFileDialog(e) {
@@ -11,8 +25,37 @@ export default class UploadSelector extends Component {
         this.fileInput.click();
     }
 
+    onDrop(e) {
+        const { onImageFileSelected } = this.props;
+        e.preventDefault();
+        this.setState({dragging: false});
+
+        if (e.dataTransfer.files[0]) {
+            onImageFileSelected(e.dataTransfer.files[0]);
+        }
+    }
+    onDragOver(e) {
+        e.preventDefault();
+    }
+
+    onDragEnter(e) {
+        this.setState({dragging: true});
+    }
+    onDragLeave(e) {
+        this.setState({dragging: false});
+    }
+
     render() {
         const { onImageFileSelected } = this.props;
+        let dropZone;
+        if (this.state.dragging) {
+            dropZone = (
+                <div className="upload-drop-zone"
+                     onDrop={this.onDrop}
+                     onDragOver={this.onDragOver}
+                     onDragLeave={this.onDragLeave} />
+            );
+        }
         return (
             <row className="upload-selector row-centered">
               <column cols="6">
@@ -27,6 +70,7 @@ export default class UploadSelector extends Component {
                                }
                            }}
                        className="hide" />
+                {dropZone}
               </column>
             </row>
         );
