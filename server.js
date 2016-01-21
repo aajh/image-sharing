@@ -18,7 +18,8 @@ const acceptedMIMETypes = {
 };
 
 function fileFilter(req, file, cb) {
-    cb(null, Object.keys(acceptedMIMETypes).indexOf(file.mimetype) !== -1);
+    cb(null, req.body.title !== undefined &&
+       Object.keys(acceptedMIMETypes).indexOf(file.mimetype) !== -1);
 }
 
 const storage = multer.diskStorage({
@@ -74,13 +75,16 @@ function getComments(image_id) {
 
 
 
-app.post('/rest/images', upload.single('image'), (req, res) => {
-    db.runAsync(`INSERT INTO images (id, title, description)
+app.post('/rest/images', (req, res) => {
+    Promise
+      .promisify(upload.single('image'))(req, res)
+      .then(() =>
+          db.runAsync(`INSERT INTO images (id, title, description)
            VALUES ($id, $title, $description)`, {
                $id: req.body.id,
                $title: req.body.title,
                $description: req.body.description
-           })
+           }))
       .then(() => db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
       .then(checkIfFound)
       .then(getImageWithSrc)
