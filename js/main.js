@@ -15,6 +15,7 @@ import { syncReduxAndRouter, routeReducer } from 'redux-simple-router';
 import * as reducers from './reducers';
 
 import Template from './components/template';
+import NotFound from './components/not-found';
 import Home from './containers/home';
 import Image from './containers/image';
 
@@ -40,6 +41,7 @@ ReactDOM.render(
         <Route path="/" component={Template}>
           <IndexRoute component={Home} />
           <Route path="/images/:image_id" component={Image} />
+          <Route path="*" component={NotFound} />
         </Route>
       </Router>
     </Provider>,
