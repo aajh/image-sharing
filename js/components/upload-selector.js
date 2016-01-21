@@ -39,14 +39,19 @@ export default class UploadSelector extends Component {
     }
 
     onDragEnter(e) {
-        this.setState({dragging: true});
+        const { accept } = this.props;
+        const { items } = e.dataTransfer;
+        if (items.length !== 0 &&
+            accept.indexOf(items[0].type) !== -1) {
+                this.setState({dragging: true});
+        }
     }
     onDragLeave(e) {
         this.setState({dragging: false});
     }
 
     render() {
-        const { onImageFileSelected } = this.props;
+        const { onImageFileSelected, accept } = this.props;
         let dropZone;
         if (this.state.dragging) {
             dropZone = (
@@ -62,7 +67,7 @@ export default class UploadSelector extends Component {
                 <p>To upload, drag & drop or <a href="#" onClick={this.openFileDialog}>select</a> an image.
                 </p>
                 <input ref={ref => this.fileInput = ref}
-                       type="file" accept="image/jpeg, image/png, image/gif"
+                       type="file" accept={accept.join(' ,')}
                        onChange={e => {
                                if (e.target.files[0]) {
                                    onImageFileSelected(e.target.files[0]);
@@ -77,5 +82,9 @@ export default class UploadSelector extends Component {
     }
 }
 UploadSelector.propTypes = {
-    onImageFileSelected: PropTypes.func.isRequired
+    onImageFileSelected: PropTypes.func.isRequired,
+    accept: PropTypes.arrayOf(PropTypes.string)
+}
+UploadSelector.defaultProps = {
+    accept: ["image/jpeg", "image/png", "image/gif"]
 }
