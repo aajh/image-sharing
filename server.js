@@ -56,10 +56,10 @@ function getImageWithSrc(image) {
         });
 }
 
-function checkNotUndefined(a) {
+function checkIfFound(a) {
     return new Promise((resolve, reject) => {
         if (a === undefined) {
-            reject(new Error('undefined value'));
+            reject(new NotFoundError('Row wasn\'t found.'));
         } else {
             resolve(a);
         }
@@ -82,7 +82,7 @@ app.post('/rest/images', upload.single('image'), (req, res) => {
                $description: req.body.description
            })
       .then(() => db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
-      .then(checkNotUndefined)
+      .then(checkIfFound)
       .then(getImageWithSrc)
       .then(image => res.json(image))
       .catch(err => res.status(500).end());
@@ -97,7 +97,7 @@ app.get('/rest/images', (req, res) => {
 
 app.get('/rest/images/:id', (req, res) => {
     Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id)
-                   .then(checkNotUndefined)
+                   .then(checkIfFound)
                    .then(getImageWithSrc),
                  getComments(req.params.id),
                  (image, comments) => {
