@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import Clipboard from 'clipboard';
 
 import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload';
 import UploadSelector from '../components/upload-selector';
@@ -64,20 +65,37 @@ UploadRow.propTypes = {
 };
 
 class UploadComplete extends Component {
+    componentDidMount() {
+        this.clipboard = new Clipboard('.upload-complete button');
+        this.clipboard.on('success', e => e.clearSelection());
+    }
+    componentWillUnmount() {
+        if (this.clipboard) {
+            this.clipboard.destroy();
+            this.clipboard = undefined;
+        }
+    }
+
     render() {
-        const { uploadedImage } = this.props;
+        const { uploadedImageLink } = this.props;
         return (
             <row className="upload-complete row-centered">
               <column cols="6">
                 <p>Upload complete!</p>
-                <p>{ `${document.location.origin}/images/${uploadedImage.id}` }</p>
+                <div className="btn-append">
+                  <input id="upload-complete-link" type="text"
+                         value={uploadedImageLink} readOnly="true" />
+                  <span><button data-clipboard-target="#upload-complete-link">
+                    Copy
+                  </button></span>
+                </div>
               </column>
             </row>
         );
     }
 }
 UploadComplete.propTypes = {
-    uploadedImage: PropTypes.object.isRequired
+    uploadedImageLink: PropTypes.string.isRequired
 };
 
 
@@ -87,7 +105,7 @@ class Upload extends Component {
     }
 
     render() {
-        const { dispatch, upload, uploadedImage } = this.props;
+        const { dispatch, upload, uploadedImageLink } = this.props;
         let additionalRow;
         if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
             upload.uploadStage === UploadStages.UPLOADING) {
@@ -98,7 +116,7 @@ class Upload extends Component {
                                 uploading={upload.uploadStage === UploadStages.UPLOADING} />
         } else if (upload.uploadStage === UploadStages.COMPLETE) {
             additionalRow = <UploadComplete
-                                uploadedImage={uploadedImage}
+                                uploadedImageLink={uploadedImageLink}
                                 onResetClick={() => dispatch(resetUpload())} />
         }
 
@@ -115,17 +133,19 @@ class Upload extends Component {
 }
 Upload.propTypes = {
     upload: PropTypes.object.isRequired,
-    uploadedImage: PropTypes.object
+    uploadedImageLink: PropTypes.string
 };
 
 function select(state) {
-    let uploadedImage;
+    let uploadedImageLink;
     if (state.upload.uploadStage === UploadStages.COMPLETE) {
-        uploadedImage = state.entities.images[state.upload.uploadedImageId];
+        //const uploadedImage = state.entities.images[state.upload.uploadedImageId];
+        //uploadedImageLink = `${document.location.origin}/images/${uploadedImage.id}`;
+        uploadedImageLink = `${document.location.origin}/images/lara`;
     }
     return {
         upload: state.upload,
-        uploadedImage
+        uploadedImageLink
     };
 }
 

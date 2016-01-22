@@ -89,8 +89,8 @@ class ImageRoute extends Component {
             image_id: this.props.image.id
         }));
     }
-    invalidComment(title, comment) {
-        return title.trim().length === 0 || comment.trim().length === 0;
+    invalidComment(username, comment) {
+        return username.length === 0 || comment.length === 0;
     }
 
     render() {
