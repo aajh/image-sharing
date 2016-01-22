@@ -115,6 +115,9 @@ app.get('/rest/images/:id', (req, res) => {
 
 
 app.post('/rest/images/:image_id/comments', (req, res) => {
+    if (req.query.username === '' || req.query.comment === '') {
+        return res.status(400).end();
+    }
     db.runAsync(`INSERT INTO comments (image_id, username, comment)
             VALUES ($image_id, $username, $comment)`, {
                 $image_id: req.params.image_id,
