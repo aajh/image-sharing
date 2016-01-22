@@ -23,8 +23,12 @@ class UploadRow extends Component {
         reader.readAsDataURL(this.props.imageFile);
     }
 
+    invalidImage(title, description) {
+        return title.trim().length === 0 || description.trim().length === 0;
+    }
+
     render() {
-        const { onUploadClick, onCancelClick } = this.props;
+        const { onUploadClick, onCancelClick, uploading } = this.props;
         return (
             <row className="upload-row row-around">
               <column cols="5">
@@ -42,7 +46,9 @@ class UploadRow extends Component {
                               onCancelClick={onCancelClick}
                               cancelName="Cancel"
                               shortName="title"
-                              longName="description"/>
+                              longName="description"
+                              posting={uploading}
+                              disabled={this.invalidImage}/>
                   </div>
                 </div>
               </column>
@@ -53,7 +59,8 @@ class UploadRow extends Component {
 UploadRow.propTypes = {
     imageFile: PropTypes.instanceOf(Blob).isRequired,
     onCancelClick: PropTypes.func.isRequired,
-    onUploadClick: PropTypes.func.isRequired
+    onUploadClick: PropTypes.func.isRequired,
+    uploading: PropTypes.bool.isRequired
 };
 
 class UploadComplete extends Component {
@@ -84,9 +91,11 @@ class Upload extends Component {
         let additionalRow;
         if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
             upload.uploadStage === UploadStages.UPLOADING) {
-            additionalRow = <UploadRow imageFile={upload.imageFile}
-                                   onUploadClick={options => dispatch(startUpload(options))}
-                                   onCancelClick={() => dispatch(resetUpload())} />
+            additionalRow = <UploadRow
+                                imageFile={upload.imageFile}
+                                onUploadClick={options => dispatch(startUpload(options))}
+                                onCancelClick={() => dispatch(resetUpload())}
+                                uploading={upload.uploadStage === UploadStages.UPLOADING} />
         } else if (upload.uploadStage === UploadStages.COMPLETE) {
             additionalRow = <UploadComplete
                                 uploadedImage={uploadedImage}

@@ -26,10 +26,22 @@ export function entities(state = initialEntitiesState, action) {
     return state;
 }
 
-const initialLastCommentPostTimeState = Date.now();
-export const lastCommentPostTime = createReducer(initialLastCommentPostTimeState, {
+const initialCommentingState = {
+    lastCommentPostTime: Date.now(),
+    posting: false
+}
+export const commenting = createReducer(initialCommentingState, {
+    [PostComment.REQUEST](state, action) {
+        return Object.assign({}, state, { posting: true });
+    },
     [PostComment.SUCCESS](state, action) {
-        return action.payload.timestamp;
+        return Object.assign({}, state, {
+            lastCommentPostTime: action.payload.timestamp,
+            posting: false
+        });
+    },
+    [PostComment.FAILURE](state, action) {
+        return Object.assign({}, state, { posting: false });
     }
 });
 
@@ -58,6 +70,11 @@ export const upload = createReducer(initialUploadState, {
         return Object.assign({}, state, {
             uploadStage: UploadStages.COMPLETE,
             uploadedImageId: action.payload.result
+        });
+    },
+    [Upload.FAILURE](state, action) {
+        return Object.assign({}, state, {
+            uploadStage: UploadStages.IMAGE_SELECTED
         });
     }
 });

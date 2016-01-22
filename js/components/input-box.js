@@ -23,24 +23,28 @@ export default class InputBox extends Component {
         this.setState({ long: e.target.value });
     }
     handlePostClick() {
-        const { onPostClick, shortName, longName } = this.props;
-        onPostClick({
-            [shortName]: this.state.short,
-            [longName]: this.state.long
-        });
+        const { onPostClick, shortName, longName, posting } = this.props;
+        if (!posting) {
+            onPostClick({
+                [shortName]: this.state.short,
+                [longName]: this.state.long
+            });
+        }
     }
 
     render() {
         const { onCancelClick,
                 postName, cancelName,
-                shortName, longName
+                shortName, longName,
+                disabled, posting
         } = this.props;
         const { short, long } = this.state;
         let cancelButton;
         if (cancelName && onCancelClick) {
             cancelButton = (
                 <button onClick={onCancelClick}
-                        className="button-outline button-upper">
+                        className="button-outline button-upper"
+                        disabled={posting}>
                   {cancelName}
                 </button>);
         }
@@ -54,8 +58,9 @@ export default class InputBox extends Component {
                 {cancelButton}
                 <button onClick={this.handlePostClick}
                         className="button-outline button-upper"
-                        type="primary">
-                  {postName}
+                        type="primary"
+                        disabled={disabled(short, long)}>
+                  {postName + (posting ? 'ing...' : '')}
                 </button>
               </p>
             </div>
@@ -68,9 +73,13 @@ InputBox.propTypes = {
     onCancelClick: PropTypes.func,
     cancelName: PropTypes.string,
     shortName: PropTypes.string.isRequired,
-    longName: PropTypes.string.isRequired
+    longName: PropTypes.string.isRequired,
+    posting: PropTypes.bool,
+    disabled: PropTypes.func
 };
 InputBox.defaultProps = {
-    postName: 'Post'
+    postName: 'Post',
+    posting: false,
+    disabled: () => false
 };
 

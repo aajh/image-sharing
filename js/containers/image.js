@@ -69,6 +69,7 @@ class ImageRoute extends Component {
         super();
         this.reloadComments = this.reloadComments.bind(this);
         this.postComment = this.postComment.bind(this);
+        this.invalidComment = this.invalidComment.bind(this);
     }
 
     componentWillMount() {
@@ -88,9 +89,12 @@ class ImageRoute extends Component {
             image_id: this.props.image.id
         }));
     }
+    invalidComment(title, comment) {
+        return title.trim().length === 0 || comment.trim().length === 0;
+    }
 
     render() {
-        const { image, lastCommentPostTime } = this.props;
+        const { image, lastCommentPostTime, posting } = this.props;
 
         if (!image) {
             return (
@@ -107,7 +111,9 @@ class ImageRoute extends Component {
                       key={lastCommentPostTime}
                       onPostClick={this.postComment}
                       shortName="username"
-                      longName="comment"/>
+                      longName="comment"
+                      posting={posting}
+                      disabled={this.invalidComment}/>
                 </column>
               </row>
             </div>
@@ -118,6 +124,7 @@ ImageRoute.propTypes = {
     loadImage: PropTypes.func.isRequired,
     loadComments: PropTypes.func.isRequired,
     lastCommentPostTime: PropTypes.any.isRequired,
+    posting: PropTypes.bool.isRequired,
     imageId: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number
@@ -126,17 +133,17 @@ ImageRoute.propTypes = {
 
 function mapStateToProps(state, props) {
     const { images, comments } = state.entities;
-    const id = props.params.image_id;
+    const { lastCommentPostTime, posting } = state.commenting;
+    const imageId = props.params.image_id;
 
     const imageProps = {
-        lastCommentPostTime: state.lastCommentPostTime,
-        imageId: id
+        lastCommentPostTime, posting, imageId
     };
 
-    if (images && images[id]) {
+    if (images && images[imageId]) {
         return Object.assign({}, imageProps, {
-            image: Object.assign({}, images[id], {
-                comments: (images[id].comments || []).map(c => comments[c])
+            image: Object.assign({}, images[imageId], {
+                comments: (images[imageId].comments || []).map(c => comments[c])
             })
         });
     } else {
