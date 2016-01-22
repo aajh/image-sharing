@@ -5,16 +5,23 @@ export default class Template extends Component {
     render() {
         return (
             <div>
-              <div className="header">
+              <header className="header">
                 <row>
-                  <column cols="1">
+                  <column cols="2">
                     <Link to="/"><h2>AbosUr</h2></Link>
                   </column>
                 </row>
-              </div>
+              </header>
               <div className="container">
                 {this.props.children}
               </div>
+              <footer className="footer">
+                <row>
+                  <column cols="12">
+                    <p>&copy;&ensp;2016&ensp;Aapo Hanski</p>
+                  </column>
+                </row>
+              </footer>
             </div>
         );
     }
