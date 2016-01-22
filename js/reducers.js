@@ -53,6 +53,9 @@ const initialUploadState = {
 
 export const upload = createReducer(initialUploadState, {
     [Upload.SELECT_IMAGE](state, action) {
+        if (state.uploadStage === UploadStages.UPLOADING) {
+            return state; // Ignore image select if uploading
+        }
         return Object.assign({}, state, {
             uploadStage: UploadStages.IMAGE_SELECTED,
             imageFile: action.payload.image

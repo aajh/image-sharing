@@ -1,4 +1,5 @@
 import { CALL_API, getJSON } from 'redux-api-middleware';
+import { replacePath } from 'redux-simple-router'
 import { normalize, arrayOf } from 'normalizr';
 import { merge } from 'lodash/object';
 import URLSearchParams from 'url-search-params';
@@ -11,20 +12,28 @@ export const Image = {
 };
 
 export function loadImage(id) {
-    return {
-        [CALL_API]: {
-            method: 'GET',
-            endpoint: `/rest/images/${id}`,
-            types: [Image.REQUEST,
-                    {
-                        type: Image.SUCCESS,
-                        payload: (action, state, res) => {
-                            return getJSON(res).then(json => normalize(json, Schemas.image));
-                        }
-                    },
-                    Image.FAILURE]
-        }
-    }
+    return dispatch => {
+        dispatch({
+            [CALL_API]: {
+                method: 'GET',
+                endpoint: `/rest/images/${id}`,
+                types: [Image.REQUEST,
+                        {
+                            type: Image.SUCCESS,
+                            payload: (action, state, res) => {
+                                return getJSON(res).then(json => normalize(json, Schemas.image));
+                            }
+                        },
+                        {
+                            type: Image.FAILURE,
+                            payload: (action, state, res) => {
+                                dispatch(replacePath('/404'));
+                                return res;
+                            }
+                        }]
+            }
+        });
+    };
 }
 
 

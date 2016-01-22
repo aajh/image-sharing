@@ -9,7 +9,7 @@ import { apiMiddleware } from 'redux-api-middleware';
 import { Provider } from 'react-redux';
 
 import { createHistory } from 'history';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, Redirect } from 'react-router';
 import { syncReduxAndRouter, routeReducer } from 'redux-simple-router';
 
 import * as reducers from './reducers';
@@ -41,7 +41,8 @@ ReactDOM.render(
         <Route path="/" component={Template}>
           <IndexRoute component={Home} />
           <Route path="/images/:image_id" component={Image} />
-          <Route path="*" component={NotFound} />
+          <Route path="/404" component={NotFound} />
+          <Redirect from="*" to="/404" />
         </Route>
       </Router>
     </Provider>,
