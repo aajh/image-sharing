@@ -26,25 +26,22 @@ export default class UploadSelector extends Component {
     }
 
     onDrop(e) {
-        const { onImageFileSelected } = this.props;
-        e.preventDefault();
-        this.setState({dragging: false});
-
-        if (e.dataTransfer.files[0]) {
-            onImageFileSelected(e.dataTransfer.files[0]);
+        const { accept, onImageFileSelected } = this.props;
+        const { files } = e.dataTransfer;
+        if (files && files.length !== 0 &&
+            accept.indexOf(files[0].type) !== -1) {
+                e.preventDefault();
+                onImageFileSelected(e.dataTransfer.files[0]);
         }
+
+        this.setState({dragging: false});
     }
     onDragOver(e) {
         e.preventDefault();
     }
 
     onDragEnter(e) {
-        const { accept } = this.props;
-        const { items } = e.dataTransfer;
-        if (items.length !== 0 &&
-            accept.indexOf(items[0].type) !== -1) {
-                this.setState({dragging: true});
-        }
+        this.setState({dragging: true});
     }
     onDragLeave(e) {
         this.setState({dragging: false});
