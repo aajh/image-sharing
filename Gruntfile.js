@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         browserify: {
             dev: {
                 files: {
-                    "./static/js/bundle.js": ["./js/main.js"]
+                    "./static/bundle.js": ["./js/main.js"]
                 },
                 options: {
                     watch: true,

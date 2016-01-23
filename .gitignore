@@ -1,6 +1,6 @@
 node_modules/
 uploads/
-static/js/bundle.js
+static/bundle.js
 static/css/style.css
 npm-debug.log
 dev.db

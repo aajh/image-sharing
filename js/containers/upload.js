@@ -139,9 +139,8 @@ Upload.propTypes = {
 function select(state) {
     let uploadedImageLink;
     if (state.upload.uploadStage === UploadStages.COMPLETE) {
-        //const uploadedImage = state.entities.images[state.upload.uploadedImageId];
-        //uploadedImageLink = `${document.location.origin}/images/${uploadedImage.id}`;
-        uploadedImageLink = `${document.location.origin}/images/lara`;
+        const uploadedImage = state.entities.images[state.upload.uploadedImageId];
+        uploadedImageLink = `${document.location.origin}/images/${uploadedImage.id}`;
     }
     return {
         upload: state.upload,
