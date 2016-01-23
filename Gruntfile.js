@@ -27,6 +27,16 @@ module.exports = function(grunt) {
                 }
             }
         },
+        'closure-compiler': {
+            production: {
+                js: './static/bundle.js',
+                jsOutputFile: './static/bundle.min.js',
+                options: {
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5_STRICT'
+                }
+            }
+        },
         express: {
             dev: {
                 options: {
@@ -64,6 +74,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-express-server');
+    grunt.loadNpmTasks('grunt-closure-compiler');
 
     grunt.registerTask('default', ['concurrent:watch']);
 };
