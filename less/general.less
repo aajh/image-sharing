@@ -20,16 +20,15 @@
 @light-pink: lighten(@pink, 20%);
 @green: color('#80FFC9');
 
-@shadow-size: 0.5em;
-@shadow-color: #858585;
+@shadow-size: 0.55em;
 
 @input-field-margin: 1em;
 @input-field-width: 16em;
 
 
-.shadow(@color: white, @direction: to bottom) {
+.shadow(@direction: to bottom) {
     height: @shadow-size;
-    background: linear-gradient(@direction, @shadow-color, @color);
+    background: linear-gradient(@direction, rgba(0,0,0,0.35), rgba(0,0,0,0));
 }
 
 .style-input-field() {
@@ -58,7 +57,7 @@
         right: -1000em;
         top: 0;
         z-index: -1;
-        .shadow(@color);
+        .shadow();
     }
     > :first-child::before {
         content: '';
@@ -67,7 +66,7 @@
         right: -1000em;
         bottom: 0;
         z-index: -1;
-        .shadow(@color, to top);
+        .shadow(to top);
     }
 }
 

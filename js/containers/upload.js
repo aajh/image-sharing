@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import Clipboard from 'clipboard';
 
@@ -110,6 +111,7 @@ class Upload extends Component {
         if (upload.uploadStage === UploadStages.IMAGE_SELECTED ||
             upload.uploadStage === UploadStages.UPLOADING) {
             additionalRow = <UploadRow
+                                key={upload.imageFile}
                                 imageFile={upload.imageFile}
                                 onUploadClick={options => dispatch(startUpload(options))}
                                 onCancelClick={() => dispatch(resetUpload())}
@@ -126,7 +128,11 @@ class Upload extends Component {
                               {file =>
                                   dispatch(selectImage(file))}
                 />
-              {additionalRow}
+                <ReactCSSTransitionGroup transitionName="upload"
+                                         transitionEnterTimeout={1000}
+                                         transitionLeaveTimeout={1000}>
+                  {additionalRow}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

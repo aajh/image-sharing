@@ -11,8 +11,11 @@
         }
     }
     row.upload-row {
-        padding: 1em 0;
-        .full-width-background(@light-pink);
+        .full-width-background(@green);
+
+        column > * {
+            margin: 1.5em 0;
+        }
 
         img {
             border: 10pt solid rgba(255,255,255,0.9);
@@ -46,5 +49,36 @@
                 width: @input-field-width;
             }
         }
+    }
+}
+
+.upload-tran-max-height() {
+    max-height: 2*28em;
+    @media (min-width: @breakpoint-small) {
+        max-height: 28em;
+    }
+}
+
+.upload-enter  {
+    overflow-x: visible;
+    > * {
+        overflow-y: hidden;
+    }
+    max-height: 0;
+    &.upload-enter-active {
+        .upload-tran-max-height();
+        transition: max-height 1s ease;
+    }
+}
+
+.upload-leave {
+    overflow-x: visible;
+    > * {
+        overflow-y: hidden;
+    }
+    .upload-tran-max-height();
+    &.upload-leave-active {
+        max-height: 0;
+        transition: max-height 1s ease;
     }
 }
