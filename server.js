@@ -18,8 +18,7 @@ const acceptedMIMETypes = {
 };
 
 function fileFilter(req, file, cb) {
-    cb(null, req.body.title !== undefined &&
-       Object.keys(acceptedMIMETypes).indexOf(file.mimetype) !== -1);
+    cb(null, Object.keys(acceptedMIMETypes).indexOf(file.mimetype) !== -1);
 }
 
 const storage = multer.diskStorage({
