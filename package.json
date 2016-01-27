@@ -4,6 +4,10 @@
   "description": "An image sharing service",
   "author": "Aapo Hanski",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aajh/image-sharing.git"
+  },
   "dependencies": {
     "babel-polyfill": "^6.3.14",
     "bluebird": "^3.1.1",
