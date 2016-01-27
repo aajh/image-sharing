@@ -32,29 +32,41 @@ const finalCreateStore = compose(
 
 const store = finalCreateStore(reducer);
 
-const history = createHistory();
-history.listen(location => {
-    let timeOut;
-    function scrollToTop() {
-	if (document.body.scrollTop !== 0 || document.documentElement.scrollTop !== 0) {
-	    window.scrollBy(0, -50);
-	    timeOut = setTimeout(() => scrollToTop(), 10);
-	}
-	else clearTimeout(timeOut);
-    }
 
-    setTimeout(() => {
-        // Keep default behavior of restoring scroll position when user:
-        // - clicked back button
-        // - clicked on a link that programmatically calls `history.goBack()`
-        // - manually changed the URL in the address bar (here we might want
-        // to scroll to top, but we can't differentiate it from the others)
-        if (location.action === 'POP' || location.action === 'REPLACE') {
-            return;
+function scrollUpListenerCreator() {
+    let scrolling = false;
+
+    function scrollUpListener(location) {
+        let timeOut;
+        function scrollToTop() {
+	    if (scrolling && (document.body.scrollTop !== 0 ||
+                              document.documentElement.scrollTop !== 0)) {
+	        window.scrollBy(0, -50);
+	        timeOut = setTimeout(() => scrollToTop(), 10);
+	    }
+	    else clearTimeout(timeOut);
         }
-        scrollToTop();
-    });
-});
+
+        setTimeout(() => {
+            // Keep default behavior of restoring scroll position when user:
+            // - clicked back button
+            // - clicked on a link that programmatically calls `history.goBack()`
+            // - manually changed the URL in the address bar (here we might want
+            // to scroll to top, but we can't differentiate it from the others)
+            if (location.action === 'REPLACE') return;
+            if (location.action === 'POP') {
+                scrolling = false; // If back button is hit, stop scrolling
+                return;
+            }
+            scrolling = true;
+            scrollToTop();
+        });
+    }
+    return scrollUpListener;
+}
+
+const history = createHistory();
+history.listen(scrollUpListenerCreator());
 syncReduxAndRouter(history, store);
 
 
