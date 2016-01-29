@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
-import Clipboard from 'clipboard';
 
 import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/upload';
 import UploadSelector from '../components/upload-selector';
+import UploadComplete from '../components/upload-complete';
 import InputBox from '../components/input-box';
 
 class UploadRow extends Component {
@@ -70,42 +70,6 @@ UploadRow.propTypes = {
     onWillUnmount: PropTypes.func
 };
 
-class UploadComplete extends Component {
-    componentDidMount() {
-        this.clipboard = new Clipboard('.upload-complete button');
-        this.clipboard.on('success', e => e.clearSelection());
-    }
-    componentWillUnmount() {
-        if (this.clipboard) {
-            this.clipboard.destroy();
-            this.clipboard = undefined;
-        }
-        if (this.props.onWillUnmount) this.props.onWillUnmount();
-    }
-
-    render() {
-        const { uploadedImageLink } = this.props;
-        return (
-            <row className="upload-complete row-centered">
-              <column cols="6">
-                <p>Upload complete!</p>
-                <div className="btn-append">
-                  <input id="upload-complete-link" type="text"
-                         value={uploadedImageLink} readOnly="true" />
-                  <span><button data-clipboard-target="#upload-complete-link">
-                    Copy
-                  </button></span>
-                </div>
-              </column>
-            </row>
-        );
-    }
-}
-UploadComplete.propTypes = {
-    uploadedImageLink: PropTypes.string.isRequired,
-    onWillUnmount: PropTypes.func
-};
-
 
 class Upload extends Component {
     constructor() {
@@ -116,6 +80,9 @@ class Upload extends Component {
         };
         this.addUploadRow = this.addUploadRow.bind(this);
         this.addCompleteRow = this.addCompleteRow.bind(this);
+    }
+    componentWillMount() {
+        this.addCompleteRow();
     }
     componentWillUnmount() {
         this.props.dispatch(resetUpload());

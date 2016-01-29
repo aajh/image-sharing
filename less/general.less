@@ -89,6 +89,47 @@
     }
 }
 
+.tooltip {
+    @tooltip-margin: 4pt;
+
+    position: relative;
+    &:before {
+        z-index: 100;
+        position: absolute;
+        display: none;
+    }
+    &:after {
+        z-index: 101;
+        position: absolute;
+        display: none;
+    }
+
+    &:hover:before {
+        display: block;
+        content: attr(data-tooltip-msg);
+
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        margin-top: @tooltip-margin;
+        padding: 0 5pt;
+        border: 1px solid #dfdfdf;
+        border-radius: 3pt;
+    }
+    &:hover:after {
+        display: inline-block;
+        content: "";
+
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+
+        height: @tooltip-margin;
+        width: 5em;
+    }
+}
+
 
 
 html, body {

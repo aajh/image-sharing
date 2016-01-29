@@ -48,6 +48,26 @@
                 .style-input-field;
                 width: @input-field-width;
             }
+            button {
+                padding: 0;
+                div {
+                    margin-top: 5.4px;
+                    padding-bottom: 6px;
+                    width: 36px;
+                    height: 33px;
+                    background-size: 35px 29px;
+                    background-clip: content-box;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-image: url("/img/noun_168961_cc.svg");
+                }
+                &.copy-success div {
+                    background-image: url("/img/noun_168965_cc.svg");
+                }
+                &.copy-info div {
+                    background-image: url("/img/noun_168963_cc.svg");
+                }
+            }
         }
     }
 }
