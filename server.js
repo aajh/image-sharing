@@ -26,7 +26,7 @@ function fileFilter(req, file, cb) {
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         fs.mkdirAsync(path.join(__dirname + '/uploads/')) // Create dir
-          .catch(Error, err => {
+          .catch(Error, function(err) {
               if (err.code === 'EEXIST') return;
               else throw err;
           }).then(function() { cb(null, 'uploads/'); });
@@ -65,7 +65,7 @@ function getImageWithSrc(image) {
 }
 
 function checkIfFound(a) {
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject)  {
         if (a === undefined) {
             reject(new NotFoundError('Row wasn\'t found.'));
         } else {
@@ -91,11 +91,11 @@ app.post('/rest/images', upload.single('image'), function(req, res) {
                $title: req.body.title,
                $description: req.body.description
            })
-      .then(() => db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id))
+      .then(function() { return db.getAsync('SELECT * FROM images WHERE id = ?', req.body.id); })
       .then(checkIfFound)
       .then(getImageWithSrc)
-      .then(image => res.json(image))
-      .catch(err => res.status(500).end());
+      .then(function(image) { return res.json(image); })
+      .catch(function(err) { res.status(500).end() });
 });
 
 app.get('/rest/images', function(req, res) {
