@@ -59,7 +59,7 @@ export default class UploadComplete extends Component {
         const msg = infoMessage || 'Copied!';
         return (
             <row className="upload-complete row-centered">
-              <column cols="6">
+              <column cols="8">
                 <p>Upload complete!</p>
                 <div className="btn-append">
                   <input id="upload-complete-link" type="text"

@@ -48,7 +48,8 @@ export const commenting = createReducer(initialCommentingState, {
 const initialUploadState = {
     uploadStage: UploadStages.START,
     imageFile: undefined,
-    uploadedImageId: undefined
+    uploadedImageId: undefined,
+    errorMessage: undefined
 };
 
 export const upload = createReducer(initialUploadState, {
@@ -58,7 +59,8 @@ export const upload = createReducer(initialUploadState, {
         }
         return Object.assign({}, state, {
             uploadStage: UploadStages.IMAGE_SELECTED,
-            imageFile: action.payload.image
+            imageFile: action.payload.image,
+            errorMessage: undefined
         });
     },
     [Upload.RESET](state, action) {
@@ -66,18 +68,21 @@ export const upload = createReducer(initialUploadState, {
     },
     [Upload.START](state, action) {
         return Object.assign({}, state, {
-            uploadStage: UploadStages.UPLOADING
+            uploadStage: UploadStages.UPLOADING,
+            errorMessage: undefined
         });
     },
     [Upload.SUCCESS](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.COMPLETE,
-            uploadedImageId: action.payload.result
+            uploadedImageId: action.payload.result,
+            errorMessage: undefined
         });
     },
     [Upload.FAILURE](state, action) {
         return Object.assign({}, state, {
-            uploadStage: UploadStages.IMAGE_SELECTED
+            uploadStage: UploadStages.IMAGE_SELECTED,
+            errorMessage: `Encountered an error while  uploading the image. Please try again later.`
         });
     }
 });

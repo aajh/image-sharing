@@ -89,8 +89,8 @@ class Upload extends Component {
     }
     componentWillReceiveProps(props) {
         const { uploadStage } = props.upload;
-        if (uploadStage === UploadStages.IMAGE_SELECTED &&
-            this.state.completeRow === undefined) {
+        if (uploadStage === UploadStages.IMAGE_SELECTED ||
+            uploadStage === UploadStages.UPLOADING) {
                 this.addUploadRow(props);
         } else {
             this.setState({uploadRow: undefined});
@@ -130,7 +130,13 @@ class Upload extends Component {
     }
 
     render() {
-        const { dispatch } = this.props;
+        const { dispatch, error } = this.props;
+        const err = error ?
+                    <row className="row-centered upload-error">
+                      <div className="alert alert-error">
+                        {error}
+                      </div>
+                    </row> : undefined;
         return (
             <div className="upload">
               <UploadSelector onImageFileSelected=
@@ -140,6 +146,7 @@ class Upload extends Component {
                 <ReactCSSTransitionGroup transitionName="upload"
                                          transitionEnterTimeout={1000}
                                          transitionLeaveTimeout={500}>
+                  {err}
                   {this.state.uploadRow}
                   {this.state.completeRow}
                 </ReactCSSTransitionGroup>
@@ -149,7 +156,8 @@ class Upload extends Component {
 }
 Upload.propTypes = {
     upload: PropTypes.object.isRequired,
-    uploadedImageLink: PropTypes.string
+    uploadedImageLink: PropTypes.string,
+    error: PropTypes.string
 };
 
 function select(state) {
@@ -160,7 +168,8 @@ function select(state) {
     }
     return {
         upload: state.upload,
-        uploadedImageLink
+        uploadedImageLink,
+        error: state.upload.errorMessage
     };
 }
 

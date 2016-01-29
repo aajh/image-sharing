@@ -10,6 +10,27 @@
             margin-bottom: 0;
         }
     }
+    row.upload-error {
+        margin-bottom: 0;
+        &.upload-enter {
+            max-height: none;
+            opacity: 0;
+            &.upload-enter-active {
+                max-height: none;
+                opacity: 1;
+                transition: opacity 1s ease;
+            }
+        }
+        &.upload-leave {
+            max-height: none;
+            opacity: 1;
+            &.upload-leave-active {
+                max-height: none;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+        }
+    }
     row.upload-row {
         .full-width-background(@green);
 
@@ -42,6 +63,12 @@
     }
     row.upload-complete {
         text-align: center;
+
+        column {
+            padding-top: 1.2em;
+            padding-bottom: 2em;
+            .full-width-background(lighten(@green, 5%), false);
+        }
         .btn-append {
             display: inline-block;
             input {

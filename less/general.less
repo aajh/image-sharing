@@ -37,7 +37,7 @@
     line-height: normal;
 }
 
-.full-width-background(@color) {
+.full-width-background(@color, @use-shadow: true) {
     position: relative;
 
     &::before {
@@ -50,7 +50,7 @@
         bottom: 0;
         z-index: -2;
     }
-    &::after {
+    &::after when (@use-shadow = true) {
         content: '';
         position: absolute;
         left: -1000em;
@@ -59,7 +59,7 @@
         z-index: -1;
         .shadow();
     }
-    > :first-child::before {
+    > :first-child::before when (@use-shadow = true) {
         content: '';
         position: absolute;
         left: -1000em;
@@ -90,7 +90,7 @@
 }
 
 .tooltip {
-    @tooltip-margin: 4pt;
+    @tooltip-margin: 2pt;
 
     position: relative;
     &:before {
