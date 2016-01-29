@@ -6,6 +6,7 @@ var Promise = require('bluebird');
 var glob = Promise.promisify(require('glob'));
 var fs = Promise.promisifyAll(require('fs'));
 var path = require('path');
+var objectAssign = require('object-assign');
 
 var db = Promise.promisifyAll(new sqlite3.Database('dev.db'));
 var app = express();
@@ -59,7 +60,7 @@ function getImageWithSrc(image) {
             }
             var ext = path.extname(paths[0]);
             var uploaded = fixTimestamp(image.uploaded);
-            return Object.assign({}, image, { src: '/' + image.id + ext, uploaded: uploaded });
+            return objectAssign({}, image, { src: '/' + image.id + ext, uploaded: uploaded });
         });
 }
 
@@ -76,7 +77,7 @@ function checkIfFound(a) {
 function getComments(image_id) {
     return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id)
         .map(function(c) {
-            return Object.assign({}, c, { timestamp: fixTimestamp(c.timestamp)});
+            return objectAssign({}, c, { timestamp: fixTimestamp(c.timestamp)});
         });
 }
 
@@ -97,7 +98,7 @@ app.post('/rest/images', upload.single('image'), function(req, res) {
 });
 
 app.get('/rest/images', function(req, res) {
-    db.allAsync('SELECT * FROM images', req.params.id)
+    db.allAsync('SELECT * FROM images')
       .map(getImageWithSrc)
       .then(function(images) { return res.json(images); })
       .catch(function(err) { return res.status(500).end(); });
@@ -109,7 +110,7 @@ app.get('/rest/images/:id', function(req, res) {
                    .then(getImageWithSrc),
                  getComments(req.params.id),
                  function(image, comments) {
-                     Object.assign(image, { comments: comments });
+                     objectAssign(image, { comments: comments });
                      res.json(image);
                  })
            .catch(NotFoundError, function(err) { res.status(404).end(); })

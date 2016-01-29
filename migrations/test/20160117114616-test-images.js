@@ -22,11 +22,6 @@ function imgPath(id) {
 }
 
 
-function getUrl(url) {
-    return url.startsWith('https://') ? https.getAsync(url) : http.getAsync(url);
-}
-
-
 exports.up = function(db, callback) {
   var filePath = path.join(__dirname + '/sqls/20160117114616-test-images-up.sql');
   fs.readFile(filePath, {encoding: 'utf-8'}, function(err, data) {
@@ -55,7 +50,7 @@ exports.up = function(db, callback) {
 
                       console.log('Downloading ' + url + '...');
 
-                      (url.startsWith('https://') ? https : http)
+                      (url.substr(0, 8) === 'https://' ? https : http)
                           .get(url, function(res) {
                               res.pipe(file);
                               console.log('writing to ' + id);
