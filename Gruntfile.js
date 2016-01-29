@@ -40,8 +40,7 @@ module.exports = function(grunt) {
         express: {
             dev: {
                 options: {
-                    script: 'server.js',
-                    harmony: true
+                    script: 'server.js'
                 }
             }
         },
