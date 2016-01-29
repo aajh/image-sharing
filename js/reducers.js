@@ -19,6 +19,7 @@ const initialEntitiesState = {
     comments: {}
 };
 
+// This reducer is responsible for storing entities.
 export function entities(state = initialEntitiesState, action) {
     if (action.payload && action.payload.entities) {
         return merge({}, state, action.payload.entities);

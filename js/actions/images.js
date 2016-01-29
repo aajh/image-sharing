@@ -27,6 +27,8 @@ export function loadImage(id) {
                         {
                             type: Image.FAILURE,
                             payload: (action, state, res) => {
+                                // Presume that the image doesn't exists.
+                                // TODO: check server status code for 404
                                 dispatch(replacePath('/404'));
                                 return res;
                             }
@@ -66,6 +68,7 @@ export const Comments = {
     FAILURE: 'LOAD_COMMENTS_FAILURE'
 };
 
+// Updates the comments array of the image when new comments are received.
 function normalizeComments(imageId, state, res) {
     return getJSON(res)
         .then(json => json.map(c => Object.assign({}, c, { image: c.image_id })))

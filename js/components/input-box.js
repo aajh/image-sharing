@@ -68,14 +68,14 @@ export default class InputBox extends Component {
     }
 }
 InputBox.propTypes = {
-    onPostClick: PropTypes.func.isRequired,
+    onPostClick: PropTypes.func.isRequired, // arg: { [shortName]: string, [longName]: string }
     postName: PropTypes.string,
     onCancelClick: PropTypes.func,
     cancelName: PropTypes.string,
     shortName: PropTypes.string.isRequired,
     longName: PropTypes.string.isRequired,
     posting: PropTypes.bool,
-    disabled: PropTypes.func
+    disabled: PropTypes.func // args: string(short), string(long)
 };
 InputBox.defaultProps = {
     postName: 'Post',

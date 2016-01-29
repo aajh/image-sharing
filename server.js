@@ -27,7 +27,7 @@ var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         fs.mkdirAsync(path.join(__dirname + '/uploads/')) // Create dir
           .catch(Error, function(err) {
-              if (err.code === 'EEXIST') return;
+              if (err.code === 'EEXIST') return; // Ignore file-exists error
               else throw err;
           }).then(function() { cb(null, 'uploads/'); });
     },
@@ -48,10 +48,12 @@ function NotFoundError(message)  {
 }
 NotFoundError.prototype = Error.prototype;
 
+// sqlite3 timestamp have ' ' instead of T between date and time, which breaks some browsers
 function fixTimestamp(timestamp) {
     return timestamp.split(' ').join('T');
 }
 
+// Returns a promise, which adds the image file url to the object.
 function getImageWithSrc(image) {
     return glob(__dirname + '/uploads/' + image.id + '.*')
         .then(function(paths) {
@@ -64,6 +66,7 @@ function getImageWithSrc(image) {
         });
 }
 
+// Helper function for detecting empty sql queries.
 function checkIfFound(a) {
     return new Promise(function(resolve, reject)  {
         if (a === undefined) {
@@ -74,6 +77,7 @@ function checkIfFound(a) {
     })
 }
 
+// Helper function, which gets comments for image id
 function getComments(image_id) {
     return db.allAsync('SELECT * FROM comments WHERE image_id = ?', image_id)
         .map(function(c) {
@@ -105,6 +109,7 @@ app.get('/rest/images', function(req, res) {
 });
 
 app.get('/rest/images/:id', function(req, res) {
+    // Get the image and its comments and put them into a single object
     Promise.join(db.getAsync('SELECT * FROM images WHERE id = ?', req.params.id)
                    .then(checkIfFound)
                    .then(getImageWithSrc),
@@ -143,6 +148,9 @@ app.get('/rest/images/:image_id/comments', function(req, res) {
 
 app.use(express.static('static'));
 app.use(express.static('uploads'));
+
+// If the file wasn't found, return the index.html.
+// This makes links to js app routes work.
 app.get('*', function(req, res) { res.sendFile(__dirname + '/static/index.html') });
 
 app.listen(3000, function() { console.log('Listening on port 3000!'); });

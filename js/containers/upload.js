@@ -22,6 +22,8 @@ class UploadRow extends Component {
     }
 
 
+    // Reads the image from file for display.
+    // TODO: stop previous load when selection is changed
     showImage() {
         this.img.src = '';
 

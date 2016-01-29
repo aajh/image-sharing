@@ -50,6 +50,7 @@ exports.up = function(db, callback) {
 
                       console.log('Downloading ' + url + '...');
 
+                      // Detect which protocol we need to use.
                       (url.substr(0, 8) === 'https://' ? https : http)
                           .get(url, function(res) {
                               res.pipe(file);
