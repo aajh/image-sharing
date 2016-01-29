@@ -109,7 +109,7 @@ app.get('/rest/images/:id', function(req, res) {
                    .then(getImageWithSrc),
                  getComments(req.params.id),
                  function(image, comments) {
-                     Object.assign(image, { comments });
+                     Object.assign(image, { comments: comments });
                      res.json(image);
                  })
            .catch(NotFoundError, function(err) { res.status(404).end(); })
