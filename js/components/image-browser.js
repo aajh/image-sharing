@@ -4,12 +4,13 @@ import { Link } from 'react-router';
 class SmallImage extends Component {
     render() {
         const image = this.props.image;
+        const style = {
+            backgroundImage: `url(${image.src})`
+        }
         return (
             <div>
               <div className="height-to-width">
-                <Link to={`/images/${image.id}`}>
-                  <img src={image.src} title={image.title} />
-                </Link>
+                <Link to={`/images/${image.id}`} style={style} />
               </div>
             </div>
         );
