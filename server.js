@@ -1,4 +1,3 @@
-"use strict";
 var express = require('express');
 var multer = require('multer');
 var uuid = require('node-uuid');
@@ -60,7 +59,7 @@ function getImageWithSrc(image) {
             }
             var ext = path.extname(paths[0]);
             var uploaded = fixTimestamp(image.uploaded);
-            return Object.assign({}, image, { src: '/' + image.id + ext, uploaded });
+            return Object.assign({}, image, { src: '/' + image.id + ext, uploaded: uploaded });
         });
 }
 
