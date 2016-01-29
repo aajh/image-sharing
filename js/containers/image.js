@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { loadImage, loadComments, postComment } from '../actions/images';
 import InputBox from '../components/input-box';
+import ErrorRow from '../components/error-row';
 
 class Comment extends Component {
     render() {
@@ -94,7 +95,7 @@ class ImageRoute extends Component {
     }
 
     render() {
-        const { image, lastCommentPostTime, posting } = this.props;
+        const { image, lastCommentPostTime, posting, error } = this.props;
 
         if (!image) {
             return (
@@ -107,6 +108,7 @@ class ImageRoute extends Component {
               <Image image={image} />
               <row className="row-centered">
                 <column cols="6">
+                  {error ? <ErrorRow error={error} /> : undefined}
                   <InputBox
                       key={lastCommentPostTime}
                       onPostClick={this.postComment}
@@ -133,11 +135,12 @@ ImageRoute.propTypes = {
 
 function mapStateToProps(state, props) {
     const { images, comments } = state.entities;
-    const { lastCommentPostTime, posting } = state.commenting;
+    const { lastCommentPostTime, posting, errorMessage } = state.commenting;
     const imageId = props.params.image_id;
 
     const imageProps = {
-        lastCommentPostTime, posting, imageId
+        lastCommentPostTime, posting, imageId,
+        error: errorMessage
     };
 
     if (images && images[imageId]) {

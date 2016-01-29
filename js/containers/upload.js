@@ -6,6 +6,7 @@ import { UploadStages, selectImage, resetUpload, startUpload } from '../actions/
 import UploadSelector from '../components/upload-selector';
 import UploadComplete from '../components/upload-complete';
 import InputBox from '../components/input-box';
+import ErrorRow from '../components/error-row';
 
 class UploadRow extends Component {
     componentDidMount() {
@@ -131,12 +132,7 @@ class Upload extends Component {
 
     render() {
         const { dispatch, error } = this.props;
-        const err = error ?
-                    <row className="row-centered upload-error">
-                      <div className="alert alert-error">
-                        {error}
-                      </div>
-                    </row> : undefined;
+        const err = error ? <ErrorRow error={error} /> : undefined;
         return (
             <div className="upload">
               <UploadSelector onImageFileSelected=

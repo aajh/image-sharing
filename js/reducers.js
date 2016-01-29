@@ -28,20 +28,25 @@ export function entities(state = initialEntitiesState, action) {
 
 const initialCommentingState = {
     lastCommentPostTime: Date.now(),
-    posting: false
+    posting: false,
+    errorMessage: undefined
 }
 export const commenting = createReducer(initialCommentingState, {
     [PostComment.REQUEST](state, action) {
-        return Object.assign({}, state, { posting: true });
+        return Object.assign({}, state, { posting: true, errorMessage: undefined });
     },
     [PostComment.SUCCESS](state, action) {
         return Object.assign({}, state, {
             lastCommentPostTime: action.payload.timestamp,
-            posting: false
+            posting: false,
+            errorMessage: undefined
         });
     },
     [PostComment.FAILURE](state, action) {
-        return Object.assign({}, state, { posting: false });
+        return Object.assign({}, state, {
+            posting: false,
+            errorMessage: `Encountered an error while posting the comment. Please try again later.`
+        });
     }
 });
 
@@ -82,7 +87,7 @@ export const upload = createReducer(initialUploadState, {
     [Upload.FAILURE](state, action) {
         return Object.assign({}, state, {
             uploadStage: UploadStages.IMAGE_SELECTED,
-            errorMessage: `Encountered an error while  uploading the image. Please try again later.`
+            errorMessage: `Encountered an error while uploading the image. Please try again later.`
         });
     }
 });
