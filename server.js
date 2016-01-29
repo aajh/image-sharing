@@ -84,8 +84,7 @@ function getComments(image_id) {
 
 
 app.post('/rest/images', upload.single('image'), function(req, res) {
-    db.runAsync(`INSERT INTO images (id, title, description)
-           VALUES ($id, $title, $description)`, {
+    db.runAsync('INSERT INTO images (id, title, description) VALUES ($id, $title, $description)', {
                $id: req.body.id,
                $title: req.body.title,
                $description: req.body.description
@@ -123,8 +122,7 @@ app.post('/rest/images/:image_id/comments', function(req, res) {
     if (req.query.username === '' || req.query.comment === '') {
         return res.status(400).end();
     }
-    db.runAsync(`INSERT INTO comments (image_id, username, comment)
-            VALUES ($image_id, $username, $comment)`, {
+    db.runAsync('INSERT INTO comments (image_id, username, comment) VALUES ($image_id, $username, $comment)', {
                 $image_id: req.params.image_id,
                 $username: req.query.username,
                 $comment: req.query.comment
@@ -144,6 +142,6 @@ app.get('/rest/images/:image_id/comments', function(req, res) {
 
 app.use(express.static('static'));
 app.use(express.static('uploads'));
-app.get('*', function(req, res) { res.sendFile(`${__dirname}/static/index.html`) });
+app.get('*', function(req, res) { res.sendFile(__dirname + '/static/index.html') });
 
 app.listen(3000, function() { console.log('Listening on port 3000!'); });
