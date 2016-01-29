@@ -37,28 +37,35 @@ exports.up = function(db, callback) {
     db.runSql(data, function(err) {
       if (err) return callback(err);
 
-        Promise.each(Object.keys(imageUrls), id => {
-            return new Promise((resolve, reject) => {
-                let file = fs.createWriteStream(imgPath(id));
-                const url = imageUrls[id];
+        fs.mkdirAsync(path.join(`${__dirname}/${uploadsPath}/`)) // Create dir
+          .catch(Error, err => {
+              if (err.code === 'EEXIST') return;
+              else throw err;
+          })
+          .then(
+              Promise.each(Object.keys(imageUrls), id => {
+                  return new Promise((resolve, reject) => {
+                      let file = fs.createWriteStream(imgPath(id));
+                      const url = imageUrls[id];
 
-                function handleError(err) {
-                    console.log(err);
-                    fs.unlink(imgPath(id)); // Delete the file (don't wait for it)
-                    reject(err.message);
-                }
+                      function handleError(err) {
+                          console.log(err);
+                          fs.unlink(imgPath(id)); // Delete the file (don't wait for it)
+                          reject(err.message);
+                      }
 
-                console.log(`Downloading ${url}...`);
+                      console.log(`Downloading ${url}...`);
 
-                (url.startsWith('https://') ? https : http)
-                    .get(url, res => {
-                        res.pipe(file);
-                        console.log('writing to ' + id);
-                        file.on('finish', () => file.close(resolve));
-                        file.on('error', handleError);
-                }).on('error', handleError);
-            });
-        })
+                      (url.startsWith('https://') ? https : http)
+                          .get(url, res => {
+                              res.pipe(file);
+                              console.log('writing to ' + id);
+                              file.on('finish', () => file.close(resolve));
+                              file.on('error', handleError);
+                          }).on('error', handleError);
+                  });
+              })
+          )
           .then(() => callback()).catch(err => callback(err));
     });
   });

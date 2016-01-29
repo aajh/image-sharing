@@ -60,7 +60,7 @@ export default class InputBox extends Component {
                         className="button-outline button-upper"
                         type="primary"
                         disabled={disabled(short, long)}>
-                  {postName + (posting ? 'ing...' : '')}
+                  {postName + (posting ? 'ing' : '')}
                 </button>
               </p>
             </div>
