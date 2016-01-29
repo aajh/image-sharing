@@ -47,7 +47,7 @@ export default class UploadComplete extends Component {
     }
 
     removeTooltip() {
-        this.setState({ infoeMessage: '' });
+        this.setState({ infoMessage: '' });
         this.button.classList.remove('tooltip');
         this.button.classList.remove('copy-success');
         this.button.classList.remove('copy-info');

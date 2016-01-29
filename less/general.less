@@ -89,44 +89,51 @@
     }
 }
 
-.tooltip {
-    @tooltip-margin: 2pt;
+.tooltip, button.tooltip {
+    @tooltip-margin: 4pt;
+    @tooltip-color: rgba(0,0,0,0.82);
 
     position: relative;
-    &:before {
+
+    &::before {
         z-index: 100;
         position: absolute;
-        display: none;
-    }
-    &:after {
-        z-index: 101;
-        position: absolute;
-        display: none;
-    }
 
-    &:hover:before {
         display: block;
         content: attr(data-tooltip-msg);
 
-        top: 100%;
-        left: 50%;
+        top: 100%; bottom: auto;
+        left: 50%; right: auto;
         transform: translateX(-50%);
 
         margin-top: @tooltip-margin;
         padding: 0 5pt;
-        border: 1px solid #dfdfdf;
         border-radius: 3pt;
+        border: none;
+
+        background-color: @tooltip-color;
+        color: white;
+
+        font-size: 10pt;
+        line-height: 24pt;
     }
-    &:hover:after {
-        display: inline-block;
+    &::after {
+        z-index: 101;
+        position: absolute;
+
+        display: block;
         content: "";
 
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
 
-        height: @tooltip-margin;
-        width: 5em;
+        height: 0;
+        width: 0;
+
+	border-left: 4pt solid transparent;
+	border-right: 4pt solid transparent;
+	border-bottom: 4pt solid @tooltip-color;
     }
 }
 
@@ -149,4 +156,8 @@ a {
 
 button {
     font-family: "Avenir Next";
+    &:active {
+        position: relative;
+        background: @color-default;
+    }
 }
