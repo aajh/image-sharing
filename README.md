@@ -1,8 +1,8 @@
 # image-sharing
 
-![Screenshot](https://dl.dropboxusercontent.com/u/4512385/AbosUr/Screenshot.png)
+![Screenshot](https://www.dropbox.com/s/m8rtjydzdls32w1/Screenshot.png?raw=1)
 
-###Usage
+### Usage
 
 First install [db-migrate](https://www.npmjs.com/package/db-migrate) and [grunt-cli](http://gruntjs.com) for node:
 
