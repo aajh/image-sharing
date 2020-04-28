@@ -3,16 +3,16 @@ var type = dbm.dataType;
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var path = require('path');
-var http = require('http');
-var https = require('https');
+var http = require('follow-redirects').http;
+var https = require('follow-redirects').https;
 
 
 var imageUrls = {
     '26f1d2ea-bd12-11e5-9912-ba0be0483c18':'http://payload336.cargocollective.com/1/17/574234/9036846/prt_500x500_1418362221_2x.jpg',
     '26f1d718-bd12-11e5-9912-ba0be0483c18': 'http://payload93.cargocollective.com/1/8/282864/4164282/IMG_0813_o.jpg',
-    '26f1d81c-bd12-11e5-9912-ba0be0483c18': 'https://dl.dropboxusercontent.com/u/4512385/AbosUr/IMG_11_ROLL_4.jpg',
+    '26f1d81c-bd12-11e5-9912-ba0be0483c18': 'https://www.dropbox.com/s/jq4jtykswgwphgn/IMG_11_ROLL_4.jpg?raw=1',
     '26f1d98e-bd12-11e5-9912-ba0be0483c18': 'http://c2.staticflickr.com/4/3901/14663175778_b333082efb_b.jpg',
-    '26f1dc2c-bd12-11e5-9912-ba0be0483c18': 'http://wallpapertvs.com/wp-content/uploads/2014/12/Vineyard_in_Winter_Wallpaper.jpg'
+    '26f1dc2c-bd12-11e5-9912-ba0be0483c18': 'http://www.hdnicewallpapers.com/1920x1080/Vineyard_in_Winter_Wallpaper.jpg'
 };
 
 var uploadsPath = '../../uploads/';
