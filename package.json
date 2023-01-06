@@ -36,7 +36,7 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
-    "babelify": "^7.2.0",
+    "babelify": "^10.0.0",
     "db-migrate": "^0.11.10",
     "db-migrate-sqlite3": "^0.4.0",
     "follow-redirects": "^1.11.0",
